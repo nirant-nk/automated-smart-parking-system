@@ -3,9 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
+import fs from 'fs';
 import helmet from 'helmet';
 import { createServer } from 'http';
+import { marked } from 'marked';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Import constants and configurations
 
@@ -57,10 +61,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Rate limiting
+// Rate limiting (coerce env to numbers and provide sane defaults)
+const windowMs = Number(process.env.RATE_LIMIT_WINDOW_MS) || (15 * 60 * 1000);
+const maxRequests = Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 100;
 const limiter = rateLimit({
-  windowMs: process.env.RATE_LIMIT_WINDOW_MS,
-  max: process.env.RATE_LIMIT_MAX_REQUESTS,
+  windowMs,
+  max: maxRequests,
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again later.',
@@ -113,6 +119,52 @@ app.get('/api/socket/status', (req, res) => {
       io: socketService.getIO() ? 'initialized' : 'not initialized'
     }
   });
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.get('/api', (req, res) => {
+  const filePath = path.join(__dirname, '../API_DOCUMENTATION.md');
+  const markdown = fs.readFileSync(filePath, 'utf8');
+
+  // Convert MD -> HTML
+  const htmlContent = marked(markdown);
+
+  // Wrap in a simple HTML page with GitHub-style markdown CSS
+  const page = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>API Documentation</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css">
+      <style>
+        body {
+          display: flex;
+          justify-content: center;
+          padding: 2rem;
+          background: #f6f8fa;
+        }
+        .markdown-body {
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          background: white;
+          padding: 2rem;
+          border-radius: 10px;
+          max-width: 900px;
+          width: 100%;
+        }
+      </style>
+    </head>
+    <body>
+      <article class="markdown-body">
+        ${htmlContent}
+      </article>
+    </body>
+    </html>
+  `;
+
+  res.send(page);
 });
 
 // 404 handler

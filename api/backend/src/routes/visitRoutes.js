@@ -20,7 +20,8 @@ import {
     validateId,
     validateParkingId,
     validateQueryParams,
-    validateVisitCreation
+    validateVisitCreation,
+    validateVisitId
 } from '../middlewares/validation.js';
 
 const router = express.Router();
@@ -36,13 +37,13 @@ router.get('/statistics', authorizeUser, validateQueryParams, getVisitStatistics
 router.get('/nearby', authorizeUser, validateQueryParams, getNearbyVisits);
 
 // Visit CRUD routes
-router.get('/:visitId', authorizeUser, validateId, getVisitById);
-router.put('/:visitId/verify', authorizeParkingStaff, validateId, verifyVisit);
+router.get('/:visitId', authorizeUser, validateVisitId, getVisitById);
+router.put('/:visitId/verify', authorizeParkingStaff, validateVisitId, verifyVisit);
 
 // Parking-specific visit routes
 router.get('/parking/:parkingId', authorizeParkingStaff, validateParkingId, validateQueryParams, getParkingVisits);
 
 // Admin routes
-router.delete('/:visitId', authorizeAdmin, validateId, deleteVisit);
+router.delete('/:visitId', authorizeAdmin, validateVisitId, deleteVisit);
 
 export default router;

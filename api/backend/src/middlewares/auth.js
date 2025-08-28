@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { ERROR_MESSAGES, USER_ROLES } from '../constants.js';
+import { ERROR_MESSAGES, USER_ROLES, JWT_EXPIRES_IN } from '../constants.js';
 import User from '../models/User.js';
 
 // Generate JWT token
 export const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
 // Verify JWT token
@@ -209,8 +209,10 @@ export const authorizeParkingStaff = async (req, res, next) => {
       return next();
     }
 
-    // Check if user is staff for the parking
-    const user = await User.findById(req.user._id).populate('staffParking');
+    // Load user with both staffParking and ownedParkings references
+    const user = await User.findById(req.user._id)
+      .populate('staffParking')
+      .populate('ownedParkings');
     
     if (req.user.role === USER_ROLES.STAFF && user.staffParking) {
       const isStaff = user.staffParking._id.toString() === parkingId || 
@@ -222,9 +224,11 @@ export const authorizeParkingStaff = async (req, res, next) => {
     }
 
     // Check if user owns the parking
-    const isOwner = user.ownedParkings.some(parking => 
-      parking._id.toString() === parkingId || parking.parkingId === parkingId
-    );
+    const isOwner = Array.isArray(user.ownedParkings) && user.ownedParkings.some((parking) => {
+      const idMatch = parking?._id?.toString && parking._id.toString() === parkingId;
+      const pidMatch = parking?.parkingId && parking.parkingId === parkingId;
+      return idMatch || pidMatch;
+    });
 
     if (isOwner) {
       return next();

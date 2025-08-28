@@ -21,7 +21,8 @@ import {
     validateId,
     validateQueryParams,
     validateRequestApproval,
-    validateRequestCreation
+    validateRequestCreation,
+    validateRequestId
 } from '../middlewares/validation.js';
 
 const router = express.Router();
@@ -35,15 +36,15 @@ router.get('/user/me', authorizeUser, validateQueryParams, getUserRequests);
 router.get('/nearby', authorizeUser, validateQueryParams, getNearbyRequests);
 
 // Request CRUD routes
-router.get('/:requestId', authorizeUser, validateId, getRequestById);
-router.put('/:requestId', authorizeUser, validateId, updateRequest);
-router.delete('/:requestId', authorizeUser, validateId, deleteRequest);
+router.get('/:requestId', authorizeUser, validateRequestId, getRequestById);
+router.put('/:requestId', authorizeUser, validateRequestId, updateRequest);
+router.delete('/:requestId', authorizeUser, validateRequestId, deleteRequest);
 
 // Admin routes
 router.get('/', authorizeAdmin, validateQueryParams, getAllRequests);
 router.get('/pending', authorizeAdmin, validateQueryParams, getPendingRequests);
 router.get('/statistics', authorizeAdmin, validateQueryParams, getRequestStatistics);
-router.put('/:requestId/approve', authorizeAdmin, validateId, validateRequestApproval, approveRequest);
-router.put('/:requestId/deny', authorizeAdmin, validateId, validateRequestApproval, denyRequest);
+router.put('/:requestId/approve', authorizeAdmin, validateRequestId, validateRequestApproval, approveRequest);
+router.put('/:requestId/deny', authorizeAdmin, validateRequestId, validateRequestApproval, denyRequest);
 
 export default router;

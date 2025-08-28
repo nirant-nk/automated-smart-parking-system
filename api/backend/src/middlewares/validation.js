@@ -364,6 +364,24 @@ export const validateParkingId = [
   handleValidationErrors
 ];
 
+// Request ID parameter validation
+export const validateRequestId = [
+  param('requestId')
+    .isMongoId()
+    .withMessage('Invalid request ID format'),
+  
+  handleValidationErrors
+];
+
+// Visit ID parameter validation
+export const validateVisitId = [
+  param('visitId')
+    .isMongoId()
+    .withMessage('Invalid visit ID format'),
+  
+  handleValidationErrors
+];
+
 // User ID parameter validation
 export const validateUserId = [
   param('userId')

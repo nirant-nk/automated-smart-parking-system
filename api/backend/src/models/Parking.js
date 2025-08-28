@@ -4,7 +4,7 @@ import { OWNERSHIP_TYPES, PARKING_TYPES, PAYMENT_TYPES, VEHICLE_TYPES } from '..
 const parkingSchema = new mongoose.Schema({
   parkingId: {
     type: String,
-    required: [true, 'Parking ID is required'],
+    // Not required; generated automatically if missing
     unique: true,
     trim: true
   },
@@ -197,9 +197,9 @@ parkingSchema.index({ isActive: 1, isApproved: 1 });
 parkingSchema.index({ location: '2dsphere', isActive: 1, isApproved: 1 });
 
 // Pre-save middleware to generate parking ID if not provided
-parkingSchema.pre('save', function(next) {
+parkingSchema.pre('validate', function(next) {
   if (!this.parkingId) {
-    this.parkingId = this._id.toString().slice(-8);
+    this.parkingId = this._id ? this._id.toString().slice(-8) : undefined;
   }
   next();
 });
