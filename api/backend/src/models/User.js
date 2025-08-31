@@ -95,12 +95,18 @@ const userSchema = new mongoose.Schema({
 });
 
 // Indexes for better performance
-userSchema.index({ location: '2dsphere' });
+userSchema.index({ location: '2dsphere' }, { sparse: true });
 userSchema.index({ role: 1 });
 userSchema.index({ isActive: 1 });
 
-// Pre-save middleware to hash password
+// Pre-save middleware to handle location and password
 userSchema.pre('save', async function(next) {
+  // Handle location field - if coordinates are not provided, remove the location field
+  if (this.location && (!this.location.coordinates || this.location.coordinates.length === 0)) {
+    this.location = undefined;
+  }
+  
+  // Handle password hashing
   if (!this.isModified('password')) return next();
   
   try {
@@ -142,10 +148,24 @@ userSchema.methods.deductCoins = function(amount, description) {
   return this.save();
 };
 
+// Instance method to update location
+userSchema.methods.updateLocation = function(coordinates) {
+  if (!coordinates || coordinates.length !== 2) {
+    throw new Error('Coordinates must be an array with exactly 2 elements');
+  }
+  
+  this.location = {
+    type: 'Point',
+    coordinates: coordinates
+  };
+  return this.save();
+};
+
 // Static method to find nearby users
 userSchema.statics.findNearby = function(coordinates, maxDistance = 10000) {
   return this.find({
     location: {
+      $exists: true,
       $near: {
         $geometry: {
           type: 'Point',
