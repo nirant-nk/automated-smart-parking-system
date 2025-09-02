@@ -203,3 +203,9 @@ export async function getParkingStatistics(parkingId: string, period = "month") 
   const res = await api.get(`/parkings/${parkingId}/statistics?period=${period}`);
   return res.data.data;
 }
+
+// Owner-focused APIs
+export async function getOwnedParkings() {
+  const res = await api.get(`/parkings/owned`);
+  return res.data.data; // { parkings: Parking[] }
+}

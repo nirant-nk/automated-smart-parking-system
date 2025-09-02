@@ -4,6 +4,9 @@ import AuthPage from "../pages/AuthPage";
 import DashboardPage from "../pages/DashboardPage";
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
+import OwnerCreateParkingPage from "../pages/OwnerCreateParkingPage";
+import OwnerManageParkingPage from "../pages/OwnerManageParkingPage";
+import OwnerParkingsPage from "../pages/OwnerParkingsPage";
 import ParkingDetailPage from "../pages/ParkingDetailPage";
 import ParkingListPage from "../pages/ParkingListPage";
 import RequestPage from "../pages/RequestPage";
@@ -48,6 +51,24 @@ export default function Router() {
             <WalletPage />
           </ProtectedRoute>
         } />
+
+        {/* Owner routes (accessible to any logged-in user; server enforces ownership) */}
+        <Route path="/owner/parkings" element={
+          <ProtectedRoute>
+            <OwnerParkingsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/owner/parkings/new" element={
+          <ProtectedRoute>
+            <OwnerCreateParkingPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/owner/parkings/:id/manage" element={
+          <ProtectedRoute>
+            <OwnerManageParkingPage />
+          </ProtectedRoute>
+        } />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
