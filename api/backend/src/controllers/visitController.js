@@ -1,9 +1,8 @@
-import Visit from '../models/Visit.js';
+import { COIN_REWARDS, ERROR_MESSAGES } from '../constants.js';
+import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
 import Parking from '../models/Parking.js';
 import User from '../models/User.js';
-import { SUCCESS_MESSAGES, ERROR_MESSAGES, COIN_REWARDS } from '../constants.js';
-import { asyncHandler } from '../middlewares/errorHandler.js';
-import { AppError } from '../middlewares/errorHandler.js';
+import Visit from '../models/Visit.js';
 
 // @desc    Create a new visit
 // @route   POST /api/visits
@@ -11,12 +10,8 @@ import { AppError } from '../middlewares/errorHandler.js';
 export const createVisit = asyncHandler(async (req, res) => {
   const { parkingId, location, distance } = req.body;
 
-  // Find parking
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true,
-    isApproved: true
-  });
+  // Find parking using the new helper method
+  const parking = await Parking.findByIdOrParkingId(parkingId, { isApproved: true });
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -121,11 +116,8 @@ export const getParkingVisits = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { page = 1, limit = 20, startDate, endDate } = req.query;
 
-  // Find parking
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  // Find parking using the new helper method
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -270,10 +262,7 @@ export const getVisitStatistics = asyncHandler(async (req, res) => {
   };
 
   if (parkingId) {
-    const parking = await Parking.findOne({
-      $or: [{ _id: parkingId }, { parkingId }],
-      isActive: true
-    });
+    const parking = await Parking.findByIdOrParkingId(parkingId);
     if (parking) {
       filters.parking = parking._id;
     }

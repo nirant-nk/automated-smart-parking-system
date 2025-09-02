@@ -306,6 +306,19 @@ parkingSchema.statics.findAvailable = function(coordinates, maxDistance = 10000,
   });
 };
 
+// Static method to find parking by ID (handles both ObjectId and parkingId string)
+parkingSchema.statics.findByIdOrParkingId = function(id, additionalFilters = {}) {
+  const filters = { isActive: true, ...additionalFilters };
+  
+  // Check if id is a valid ObjectId
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    return this.findOne({ _id: id, ...filters });
+  }
+  
+  // If not a valid ObjectId, search by parkingId
+  return this.findOne({ parkingId: id, ...filters });
+};
+
 // Virtual for occupancy percentage
 parkingSchema.virtual('occupancyPercentage').get(function() {
   const totalCapacity = this.getTotalCapacity();

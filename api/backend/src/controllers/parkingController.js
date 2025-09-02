@@ -1,8 +1,7 @@
+import { ERROR_MESSAGES, MAX_STAFF_PER_PARKING, SUCCESS_MESSAGES, USER_ROLES } from '../constants.js';
+import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
 import Parking from '../models/Parking.js';
 import User from '../models/User.js';
-import { SUCCESS_MESSAGES, ERROR_MESSAGES, USER_ROLES, MAX_STAFF_PER_PARKING } from '../constants.js';
-import { asyncHandler } from '../middlewares/errorHandler.js';
-import { AppError } from '../middlewares/errorHandler.js';
 
 // @desc    Create a new parking
 // @route   POST /api/parkings
@@ -168,10 +167,8 @@ export const getAvailableParkings = asyncHandler(async (req, res) => {
 export const getParkingById = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  }).populate('owner', 'name email phone')
+  const parking = await Parking.findByIdOrParkingId(parkingId)
+    .populate('owner', 'name email phone')
     .populate('staff', 'name email phone');
 
   if (!parking) {
@@ -193,10 +190,7 @@ export const updateParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const updateData = req.body;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -231,10 +225,7 @@ export const updateParking = asyncHandler(async (req, res) => {
 export const deleteParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -262,10 +253,7 @@ export const updateVehicleCount = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { vehicleType, count } = req.body;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -295,10 +283,7 @@ export const incrementVehicleCount = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { vehicleType, increment = 1 } = req.body;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -328,10 +313,7 @@ export const decrementVehicleCount = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { vehicleType, decrement = 1 } = req.body;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -361,10 +343,7 @@ export const getParkingStatistics = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { period = 'month' } = req.query;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -425,10 +404,7 @@ export const addStaffToParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
   const { userId } = req.body;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -478,10 +454,7 @@ export const addStaffToParking = asyncHandler(async (req, res) => {
 export const removeStaffFromParking = asyncHandler(async (req, res) => {
   const { parkingId, userId } = req.params;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -521,10 +494,8 @@ export const removeStaffFromParking = asyncHandler(async (req, res) => {
 export const getParkingStaff = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  }).populate('staff', 'name email phone role');
+  const parking = await Parking.findByIdOrParkingId(parkingId)
+    .populate('staff', 'name email phone role');
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -544,10 +515,7 @@ export const getParkingStaff = asyncHandler(async (req, res) => {
 export const approveParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
 
-  const parking = await Parking.findOne({
-    $or: [{ _id: parkingId }, { parkingId }],
-    isActive: true
-  });
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);

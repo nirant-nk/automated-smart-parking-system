@@ -137,11 +137,8 @@ class SocketService {
         return;
       }
 
-      // Find parking by ID
-      const parking = await Parking.findOne({
-        $or: [{ _id: parking_id }, { parkingId: parking_id }],
-        isActive: true
-      });
+      // Find parking by ID using the new helper method
+      const parking = await Parking.findByIdOrParkingId(parking_id, { isActive: true });
 
       if (!parking) {
         socket.emit('error', { message: 'Parking not found' });
@@ -193,11 +190,8 @@ class SocketService {
         return;
       }
 
-      // Find parking by ID
-      const parking = await Parking.findOne({
-        $or: [{ _id: parkingId }, { parkingId }],
-        isActive: true
-      });
+      // Find parking by ID using the new helper method
+      const parking = await Parking.findByIdOrParkingId(parkingId, { isActive: true });
 
       if (!parking) {
         socket.emit('error', { message: 'Parking not found' });
