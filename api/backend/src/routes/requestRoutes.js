@@ -18,10 +18,8 @@ import {
     authorizeUser
 } from '../middlewares/auth.js';
 import {
-    validateId,
     validateQueryParams,
     validateRequestApproval,
-    validateRequestCreation,
     validateRequestId
 } from '../middlewares/validation.js';
 
@@ -31,7 +29,8 @@ const router = express.Router();
 router.use(authenticate);
 
 // Request management routes
-router.post('/', authorizeUser, validateRequestCreation, createRequest);
+// router.post('/', authorizeUser, validateRequestCreation, createRequest);
+router.post('/', authorizeUser, createRequest);
 router.get('/user/me', authorizeUser, validateQueryParams, getUserRequests);
 router.get('/nearby', authorizeUser, validateQueryParams, getNearbyRequests);
 

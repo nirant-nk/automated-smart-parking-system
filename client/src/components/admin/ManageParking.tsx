@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteParking, getAllParkings } from "../../services/parkingService";
 import { Link } from "react-router-dom";
+import { deleteParking, getAllParkings } from "../../services/parkingService";
 
 export default function ManageParking() {
   const queryClient = useQueryClient();
@@ -15,7 +15,7 @@ export default function ManageParking() {
   return (
     <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-white">All Parkings</h2>
+        <h2 className="text-xl font-semibold text-black">All Parkings</h2>
         <Link to="/owner/parkings/new" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">+ Add Parking</Link>
       </div>
 
@@ -26,7 +26,7 @@ export default function ManageParking() {
       ) : error ? (
         <div className="text-red-300">Failed to load parkings</div>
       ) : parkings.length === 0 ? (
-        <div className="text-gray-200">No parkings found.</div>
+        <div className="text-gray-500">No parkings found.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {parkings.map((p: any) => (

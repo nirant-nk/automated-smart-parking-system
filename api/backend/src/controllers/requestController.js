@@ -1,8 +1,6 @@
+import { COIN_REWARDS, SUCCESS_MESSAGES } from '../constants.js';
+import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
 import Request from '../models/Request.js';
-import User from '../models/User.js';
-import { SUCCESS_MESSAGES, ERROR_MESSAGES, COIN_REWARDS } from '../constants.js';
-import { asyncHandler } from '../middlewares/errorHandler.js';
-import { AppError } from '../middlewares/errorHandler.js';
 
 // @desc    Create a new request
 // @route   POST /api/requests
@@ -29,6 +27,7 @@ export const createRequest = asyncHandler(async (req, res) => {
     parkingDetails,
     noParkingDetails
   });
+
 
   res.status(201).json({
     success: true,

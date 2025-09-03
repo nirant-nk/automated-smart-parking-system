@@ -17,7 +17,7 @@ export default function ManageRequests() {
 
   return (
     <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-      <h2 className="text-xl font-semibold text-white mb-4">User Requests</h2>
+      <h2 className="text-xl font-semibold text-black mb-4">User Requests</h2>
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
@@ -25,7 +25,7 @@ export default function ManageRequests() {
       ) : error ? (
         <div className="text-red-300">Failed to load requests</div>
       ) : requests.length === 0 ? (
-        <div className="text-gray-200">No requests</div>
+        <div className="text-gray-500">No requests</div>
       ) : (
         <div className="space-y-3">
           {requests.map((r: any) => (
