@@ -187,12 +187,12 @@ export default function RequestPage() {
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white mb-2">My Requests</h1>
-                <p className="text-gray-200">Manage your parking requests and track their status</p>
+                <h1 className="text-3xl font-bold text-black mb-2">My Requests</h1>
+                <p className="text-gray-500">Manage your parking requests and track their status</p>
               </div>
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
+                className="bg-green-600 font-bold hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
               >
                 {showForm ? 'Cancel' : 'New Request'}
               </button>
@@ -202,18 +202,18 @@ export default function RequestPage() {
           {/* New Request Form */}
           {showForm && (
             <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
-              <h2 className="text-xl font-semibold text-white mb-4">Submit New Request</h2>
+              <h2 className="text-xl font-semibold text-black mb-4">Submit New Request</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-300 text-sm mb-2">Request Type</label>
+                    <label className="block text-gray-500 text-sm mb-2">Request Type</label>
                     <select
                       name="requestType"
                       value={formData.requestType}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg textblack ring-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="parking">New Parking Location</option>
                       <option value="no_parking">No Parking Zone</option>
@@ -221,35 +221,35 @@ export default function RequestPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-gray-300 text-sm mb-2">Title</label>
+                    <label className="block text-gray-500 text-sm mb-2">Title</label>
                     <input
                       type="text"
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
                       placeholder="Enter request title"
-                      className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                      className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg  placeholder-gray-400 focus:outline-none focus:ring-2 text-black ring-1 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 text-sm mb-2">Description</label>
+                  <label className="block text-gray-500 text-sm mb-2">Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
                     placeholder="Describe your request in detail..."
                     rows={4}
-                    className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                    className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                     required
                   />
                 </div>
 
                 {/* Location Information */}
                 <div>
-                  <label className="block text-gray-300 text-sm mb-2">Location Details</label>
+                  <label className="block text-gray-500 text-sm mb-2">Location Details</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                       type="text"
@@ -257,7 +257,7 @@ export default function RequestPage() {
                       value={formData.location.address.street}
                       onChange={handleInputChange}
                       placeholder="Street Address"
-                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                     />
                     <input
                       type="text"
@@ -265,7 +265,7 @@ export default function RequestPage() {
                       value={formData.location.address.city}
                       onChange={handleInputChange}
                       placeholder="City"
-                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                     />
                     <input
                       type="text"
@@ -273,7 +273,7 @@ export default function RequestPage() {
                       value={formData.location.address.state}
                       onChange={handleInputChange}
                       placeholder="State"
-                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                     />
                     <input
                       type="text"
@@ -281,7 +281,7 @@ export default function RequestPage() {
                       value={formData.location.address.postalCode}
                       onChange={handleInputChange}
                       placeholder="Postal Code"
-                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                      className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                     />
                   </div>
                 </div>
@@ -289,28 +289,28 @@ export default function RequestPage() {
                 {/* Parking Details (if parking request) */}
                 {formData.requestType === 'parking' && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-white">Parking Details</h3>
+                    <h3 className="text-lg font-medium text-gray-950">Parking Details</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Parking Name</label>
+                        <label className="block text-gray-500 text-sm mb-2">Parking Name</label>
                         <input
                           type="text"
                           name="parkingDetails.name"
                           value={formData.parkingDetails.name}
                           onChange={handleInputChange}
                           placeholder="Parking lot name"
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Parking Type</label>
+                        <label className="block text-gray-500 text-sm mb-2">Parking Type</label>
                         <select
                           name="parkingDetails.parkingType"
                           value={formData.parkingDetails.parkingType}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         >
                           <option value="opensky">Open Sky</option>
                           <option value="closedsky">Closed Sky</option>
@@ -318,12 +318,12 @@ export default function RequestPage() {
                       </div>
                       
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Payment Type</label>
+                        <label className="block text-gray-500 text-sm mb-2">Payment Type</label>
                         <select
                           name="parkingDetails.paymentType"
                           value={formData.parkingDetails.paymentType}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         >
                           <option value="free">Free</option>
                           <option value="paid">Paid</option>
@@ -333,38 +333,38 @@ export default function RequestPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Car Capacity</label>
+                        <label className="block text-gray-500 text-sm mb-2">Car Capacity</label>
                         <input
                           type="number"
                           name="parkingDetails.capacity.car"
-                          value={formData.parkingDetails.capacity.car}
+                          value={formData.parkingDetails.capacity.car<=0? 0 : formData.parkingDetails.capacity.car}
                           onChange={handleInputChange}
                           placeholder="0"
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Bike Capacity</label>
+                        <label className="block text-gray-500 text-sm mb-2">Bike Capacity</label>
                         <input
                           type="number"
                           name="parkingDetails.capacity.bike"
-                          value={formData.parkingDetails.capacity.bike}
+                          value={formData.parkingDetails.capacity.bike<=0? 0: formData.parkingDetails.capacity.bike }
                           onChange={handleInputChange}
                           placeholder="0"
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-gray-300 text-sm mb-2">Bus/Truck Capacity</label>
+                        <label className="block text-gray-500 text-sm mb-2">Bus/Truck Capacity</label>
                         <input
                           type="number"
                           name="parkingDetails.capacity.bus_truck"
-                          value={formData.parkingDetails.capacity.bus_truck}
+                          value={formData.parkingDetails.capacity.bus_truck<=0?0:formData.parkingDetails.capacity.bus_truck}
                           onChange={handleInputChange}
                           placeholder="0"
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                          className="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black ring-1 placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                         />
                       </div>
                     </div>
@@ -375,14 +375,14 @@ export default function RequestPage() {
                   <button
                     type="button"
                     onClick={() => setShowForm(false)}
-                    className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                    className="px-6 py-2 bg-gray-600 font-bold hover:bg-gray-700 text-white rounded-lg transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={createRequestMutation.isPending}
-                    className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg transition-colors"
+                    className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white font-bold rounded-lg transition-colors"
                   >
                     {createRequestMutation.isPending ? 'Submitting...' : 'Submit Request'}
                   </button>
@@ -393,7 +393,7 @@ export default function RequestPage() {
 
           {/* Requests List */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-            <h2 className="text-xl font-semibold text-white mb-4">Your Requests</h2>
+            <h2 className="text-xl font-semibold text-black mb-4">Your Requests</h2>
             
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
@@ -406,13 +406,13 @@ export default function RequestPage() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-medium text-white">{request.title}</h3>
+                          <h3 className="text-lg font-medium text-gray-900">{request.title}</h3>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
                             {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                           </span>
                         </div>
-                        <p className="text-gray-300 text-sm mb-2">{request.description}</p>
-                        <div className="flex flex-wrap gap-4 text-xs text-gray-400">
+                        <p className="text-gray-800 text-sm mb-2">{request.description}</p>
+                        <div className="flex flex-wrap gap-4 text-xs text-gray-800">
                           <span>Type: {request.requestType}</span>
                           <span>Submitted: {new Date(request.createdAt).toLocaleDateString()}</span>
                           {request.coinsAwarded > 0 && (
@@ -423,8 +423,8 @@ export default function RequestPage() {
                       
                       {request.adminNotes && (
                         <div className="text-sm">
-                          <p className="text-gray-300 font-medium">Admin Notes:</p>
-                          <p className="text-gray-400">{request.adminNotes}</p>
+                          <p className="text-red-600 font-medium">Admin Notes:</p>
+                          <p className="text-amber-300">{request.adminNotes}</p>
                         </div>
                       )}
                     </div>
@@ -434,8 +434,8 @@ export default function RequestPage() {
             ) : (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">📝</div>
-                <p className="text-xl text-white mb-2">No requests found</p>
-                <p className="text-gray-200">Submit your first parking request to get started!</p>
+                <p className="text-xl text-black mb-2">No requests found</p>
+                <p className="text-gray-500">Submit your first parking request to get started!</p>
               </div>
             )}
           </div>

@@ -11,12 +11,9 @@ import ParkingDetailPage from "../pages/ParkingDetailPage";
 import ParkingListPage from "../pages/ParkingListPage";
 import RequestPage from "../pages/RequestPage";
 import WalletPage from "../pages/WalletPage";
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/auth" />;
-  return <>{children}</>;
-}
+import AdminDashboardPage from "../pages/AdminDashboardPage";
+import ProfilePage from "../pages/ProfilePage";
+import ProtectedRoute from "./ProtectedRoute";
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -52,7 +49,7 @@ export default function Router() {
           </ProtectedRoute>
         } />
 
-        {/* Owner routes (accessible to any logged-in user; server enforces ownership) */}
+        {/* Owner routes */}
         <Route path="/owner/parkings" element={
           <ProtectedRoute>
             <OwnerParkingsPage />
@@ -66,6 +63,20 @@ export default function Router() {
         <Route path="/owner/parkings/:id/manage" element={
           <ProtectedRoute>
             <OwnerManageParkingPage />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin/Owner dashboard */}
+        <Route path="/admin" element={
+          <ProtectedRoute roles={["admin", "owner"]}>
+            <AdminDashboardPage />
+          </ProtectedRoute>
+        } />
+
+        {/* Profile */}
+        <Route path="/profile" element={
+          <ProtectedRoute roles={["user", "owner", "staff", "admin"]}>
+            <ProfilePage />
           </ProtectedRoute>
         } />
 

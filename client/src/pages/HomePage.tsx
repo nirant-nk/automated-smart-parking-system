@@ -17,7 +17,7 @@ export default function HomePage() {
       <Layout showNavigation={false}>
         <div className="min-h-screen flex items-center justify-center p-4">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">Welcome to ParkSmart</h1>
+            <h1 className="text-4xl font-bold text-black mb-4">Welcome to ParkSmart</h1>
             <p className="text-xl text-gray-200 mb-8">
               Find and manage parking spots with ease
             </p>
@@ -41,8 +41,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-white mb-2">Find Parking Near You</h1>
-                          <p className="text-gray-200">Discover available parking spots in your area</p>
+            <h1 className="text-3xl font-bold text-black mb-2">Find Parking Near You</h1>
+                    <p className="text-white">Discover available parking spots in your area</p>
           </div>
 
           {/* Search and Filters */}
@@ -52,16 +52,16 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Search for a location..."
-                  className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                  className="w-full ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                 />
               </div>
               <div className="flex gap-2">
-                <select className="px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30">
+                <select className="px-4 py-3 ring-1 ring-gray-300 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30">
                   <option value="">Parking Type</option>
                   <option value="opensky">Open Sky</option>
                   <option value="closedsky">Closed Sky</option>
                 </select>
-                <select className="px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30">
+                <select className="px-4 py-3 ring-1 ring-gray-300 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30">
                   <option value="">Payment Type</option>
                   <option value="free">Free</option>
                   <option value="paid">Paid</option>
@@ -84,10 +84,10 @@ export default function HomePage() {
               <div className="text-center">
                 <div className="text-4xl mb-4">📝</div>
                 <h3 className="text-xl font-semibold text-white mb-2">Request New Parking</h3>
-                <p className="text-gray-200 mb-4">Suggest a new parking location in your area</p>
+                <p className="text-neutral-900 mb-4">Suggest a new parking location in your area</p>
                 <button
                   onClick={() => navigate('/requests')}
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
+                  className="bg-green-600 hover:bg-green-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
                 >
                   Make Request
                 </button>
@@ -98,10 +98,10 @@ export default function HomePage() {
               <div className="text-center">
                 <div className="text-4xl mb-4">💰</div>
                 <h3 className="text-xl font-semibold text-white mb-2">Wallet & Rewards</h3>
-                <p className="text-gray-200 mb-4">Check your coin balance and transaction history</p>
+                <p className="text-neutral-900 mb-4">Check your coin balance and transaction history</p>
                 <button
                   onClick={() => navigate('/wallet')}
-                  className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg transition-colors"
+                  className="bg-yellow-600 hover:bg-yellow-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
                 >
                   View Wallet
                 </button>
@@ -112,10 +112,10 @@ export default function HomePage() {
               <div className="text-center">
                 <div className="text-4xl mb-4">👤</div>
                 <h3 className="text-xl font-semibold text-white mb-2">Profile & Settings</h3>
-                <p className="text-gray-200 mb-4">Manage your account and preferences</p>
+                <p className="text-neutral-900 mb-4">Manage your account and preferences</p>
                 <button
                   onClick={() => navigate('/dashboard')}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors"
+                  className="bg-purple-600 hover:bg-purple-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
                 >
                   View Profile
                 </button>

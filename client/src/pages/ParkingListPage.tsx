@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { getAllParkings } from "../services/parkingService";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import ParkingMap from "../components/map/ParkingMap";
-import { useNavigate } from "react-router-dom";
+import { getAllParkings } from "../services/parkingService";
 
 export default function ParkingListPage() {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
@@ -82,8 +82,8 @@ export default function ParkingListPage() {
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Parking Spaces</h1>
-                <p className="text-gray-300">Find the perfect parking spot for your vehicle</p>
+                <h1 className="text-3xl font-bold text-black mb-2">Parking Spaces</h1>
+                <p className="text-gray-500">Find the perfect parking spot for your vehicle</p>
               </div>
               
               {/* View Mode Toggle */}
@@ -92,8 +92,8 @@ export default function ParkingListPage() {
                   onClick={() => setViewMode('map')}
                   className={`px-4 py-2 rounded-md transition-colors ${
                     viewMode === 'map'
-                      ? 'bg-white bg-opacity-20 text-white'
-                      : 'text-gray-300 hover:text-white'
+                      ? 'bg-white bg-opacity-20 text-black'
+                      : 'text-gray-500 hover:font-bold hover:text-black hover:bg-gray-300 active:bg-gray-300' 
                   }`}
                 >
                   🗺️ Map
@@ -102,8 +102,8 @@ export default function ParkingListPage() {
                   onClick={() => setViewMode('list')}
                   className={`px-4 py-2 rounded-md transition-colors ${
                     viewMode === 'list'
-                      ? 'bg-white bg-opacity-20 text-white'
-                      : 'text-gray-300 hover:text-white'
+                      ? 'bg-white bg-opacity-20 text-black'
+                      : 'text-gray-500 hover:font-bold hover:text-black hover:bg-gray-300 active:bg-gray-300'
                   }`}
                 >
                   📋 List
@@ -120,13 +120,13 @@ export default function ParkingListPage() {
                 placeholder="Search parkings..."
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500 ring-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
               />
               
               <select
                 value={filters.parkingType}
                 onChange={(e) => setFilters({ ...filters, parkingType: e.target.value })}
-                className="px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 ring-1 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Types</option>
                 <option value="opensky">Open Sky</option>
@@ -136,7 +136,7 @@ export default function ParkingListPage() {
               <select
                 value={filters.paymentType}
                 onChange={(e) => setFilters({ ...filters, paymentType: e.target.value })}
-                className="px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-black ring-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Payment</option>
                 <option value="free">Free</option>
@@ -146,7 +146,7 @@ export default function ParkingListPage() {
               <select
                 value={filters.isFull}
                 onChange={(e) => setFilters({ ...filters, isFull: e.target.value })}
-                className="px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2  ring-1 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Status</option>
                 <option value="false">Available</option>
@@ -155,7 +155,7 @@ export default function ParkingListPage() {
               
               <button
                 onClick={() => setFilters({ parkingType: '', paymentType: '', isFull: '', search: '' })}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2  bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
               >
                 Clear Filters
               </button>

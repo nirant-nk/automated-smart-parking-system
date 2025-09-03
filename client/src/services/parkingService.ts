@@ -137,42 +137,19 @@ export async function getAvailableParkings(filters: NearbyParkingFilters) {
   return res.data.data;
 }
 
-export async function createParking(parkingData: {
-  name: string;
-  description?: string;
-  location: {
-    type: "Point";
-    coordinates: [number, number];
-    address?: {
-      street?: string;
-      city?: string;
-      state?: string;
-      country?: string;
-      postalCode?: string;
-    };
-  };
-  parkingType: "opensky" | "closedsky";
-  paymentType: "paid" | "free";
-  ownershipType: "private" | "public";
-  capacity: {
-    car: number;
-    bus_truck: number;
-    bike: number;
-  };
-  hourlyRate: {
-    car: number;
-    bus_truck: number;
-    bike: number;
-  };
-  amenities?: string[];
-  operatingHours?: {
-    open: string;
-    close: string;
-    is24Hours: boolean;
-  };
-}) {
+export async function createParking(parkingData: any) {
   const res = await api.post("/parkings", parkingData);
   return res.data.data;
+}
+
+export async function updateParking(id: string, updateData: any) {
+  const res = await api.put(`/parkings/${id}`, updateData);
+  return res.data.data;
+}
+
+export async function deleteParking(id: string) {
+  const res = await api.delete(`/parkings/${id}`);
+  return res.data;
 }
 
 export async function updateVehicleCount(parkingId: string, vehicleType: "car" | "bus_truck" | "bike", count: number) {

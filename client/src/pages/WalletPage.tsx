@@ -50,26 +50,26 @@ export default function WalletPage() {
       <div className="p-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
-            <h1 className="text-3xl font-bold text-white mb-2">Wallet</h1>
-            <p className="text-gray-200">Manage your in-app currency and transactions</p>
+          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
+            <h1 className="text-3xl font-bold text-black mb-2">Wallet</h1>
+            <p className="text-gray-500">Manage your in-app currency and transactions</p>
           </div>
 
           {/* Balance Card */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
             <div className="text-center">
-              <h2 className="text-2xl font-semibold text-white mb-2">Coin Balance</h2>
+              <h2 className="text-2xl font-semibold text-black mb-2">Coin Balance</h2>
               <div className="text-5xl font-bold text-green-400 mb-4">
                 {user.wallet.coins.toLocaleString()} Coins
               </div>
               <div className="flex justify-center space-x-8 text-sm">
                 <div>
-                  <span className="text-gray-200">Total Earned:</span>
-                  <span className="text-green-400 ml-2">+{totalCredits.toLocaleString()}</span>
+                  <span className="text-gray-500">Total Earned:</span>
+                  <span className="text-green-500 ml-2">+{totalCredits.toLocaleString()}</span>
                 </div>
                 <div>
-                  <span className="text-gray-200">Total Spent:</span>
-                  <span className="text-red-400 ml-2">-{totalDebits.toLocaleString()}</span>
+                  <span className="text-gray-500">Total Spent:</span>
+                  <span className="text-red-500 ml-2">-{totalDebits.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -78,43 +78,40 @@ export default function WalletPage() {
           {/* Transaction History */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-              <h2 className="text-xl font-semibold text-white mb-4 md:mb-0">Transaction History</h2>
-              
+              <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction History</h2>
+
               {/* Search and Filter */}
               <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                 <input
                   type="text"
                   placeholder="Search transactions..."
-                  className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                  className="px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500  ring-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                 />
                 <div className="flex bg-white bg-opacity-10 rounded-lg p-1">
                   <button
                     onClick={() => setActiveTab('all')}
-                    className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                      activeTab === 'all'
-                        ? 'bg-white bg-opacity-20 text-white'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
+                    className={`px-3 py-1 rounded-md text-sm transition-colors ${activeTab === 'all'
+                        ? 'bg-white  text-black font-extrabold'
+                        : 'text-gray-500 '
+                      }`}
                   >
                     All
                   </button>
                   <button
                     onClick={() => setActiveTab('credits')}
-                    className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                      activeTab === 'credits'
-                        ? 'bg-white bg-opacity-20 text-white'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
+                    className={`px-3 py-1 rounded-md text-sm transition-colors ${activeTab === 'credits'
+                        ? 'bg-white  text-black font-extrabold'
+                        : 'text-gray-500 '
+                      }`}
                   >
                     Credits
                   </button>
                   <button
                     onClick={() => setActiveTab('debits')}
-                    className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                      activeTab === 'debits'
-                        ? 'bg-white bg-opacity-20 text-white'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
+                    className={`px-3 py-1 rounded-md text-sm transition-colors ${activeTab === 'debits'
+                        ? 'bg-white  text-black font-extrabold'
+                        : 'text-gray-500 '
+                      }`}
                   >
                     Debits
                   </button>
@@ -132,10 +129,10 @@ export default function WalletPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-white border-opacity-20">
-                        <th className="text-left py-3 px-4 text-gray-300 font-medium">Description</th>
-                        <th className="text-left py-3 px-4 text-gray-300 font-medium">Type</th>
-                        <th className="text-left py-3 px-4 text-gray-300 font-medium">Amount</th>
-                        <th className="text-left py-3 px-4 text-gray-300 font-medium">Date</th>
+                        <th className="text-left py-3 px-4 text-gray-800 font-medium">Description</th>
+                        <th className="text-left py-3 px-4 text-gray-800 font-medium">Type</th>
+                        <th className="text-left py-3 px-4 text-gray-800 font-medium">Amount</th>
+                        <th className="text-left py-3 px-4 text-gray-800 font-medium">Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -143,26 +140,24 @@ export default function WalletPage() {
                         <tr key={index} className="border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-5">
                           <td className="py-4 px-4">
                             <div>
-                              <p className="text-white font-medium">{transaction.description}</p>
+                              <p className="text-gray-800 font-medium">{transaction.description}</p>
                             </div>
                           </td>
                           <td className="py-4 px-4">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              transaction.type === 'credit'
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${transaction.type === 'credit'
                                 ? 'bg-green-500 bg-opacity-20 text-green-300'
                                 : 'bg-red-500 bg-opacity-20 text-red-300'
-                            }`}>
+                              }`}>
                               {transaction.type === 'credit' ? 'Credit' : 'Debit'}
                             </span>
                           </td>
                           <td className="py-4 px-4">
-                            <span className={`font-medium ${
-                              transaction.type === 'credit' ? 'text-green-400' : 'text-red-400'
-                            }`}>
+                            <span className={`font-medium ${transaction.type === 'credit' ? 'text-green-400' : 'text-red-400'
+                              }`}>
                               {transaction.type === 'credit' ? '+' : '-'}{transaction.amount} coins
                             </span>
                           </td>
-                          <td className="py-4 px-4 text-gray-300 text-sm">
+                          <td className="py-4 px-4 text-gray-700 text-sm">
                             {new Date(transaction.timestamp).toLocaleDateString('en-US', {
                               year: 'numeric',
                               month: 'short',
@@ -187,11 +182,11 @@ export default function WalletPage() {
                     >
                       Previous
                     </button>
-                    
+
                     <span className="text-white">
                       Page {currentPage} of {totalPages}
                     </span>
-                    
+
                     <button
                       onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
@@ -205,30 +200,30 @@ export default function WalletPage() {
             ) : (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">💰</div>
-                <p className="text-xl text-white mb-2">No transactions found</p>
-                <p className="text-gray-300">Start using parking services to earn coins!</p>
+                <p className="text-xl text-gray-500 mb-2">No transactions found</p>
+                <p className="text-gray-400">Start using parking services to earn coins!</p>
               </div>
             )}
           </div>
 
           {/* How to Earn */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mt-6 border border-white border-opacity-20">
-            <h2 className="text-xl font-semibold text-white mb-4">How to Earn Coins</h2>
+            <h2 className="text-xl font-semibold text-black mb-4">How to Earn Coins</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-white bg-opacity-5 rounded-lg">
                 <div className="text-3xl mb-2">🚗</div>
-                <h3 className="text-white font-medium mb-2">Check-in at Parking</h3>
-                <p className="text-gray-300 text-sm">Earn 10 coins for each verified parking visit</p>
+                <h3 className="text-gray-500 font-medium mb-2">Check-in at Parking</h3>
+                <p className="text-gray-400 text-sm">Earn 10 coins for each verified parking visit</p>
               </div>
               <div className="text-center p-4 bg-white bg-opacity-5 rounded-lg">
                 <div className="text-3xl mb-2">📝</div>
-                <h3 className="text-white font-medium mb-2">Submit Requests</h3>
-                <p className="text-gray-300 text-sm">Earn 50 coins when your parking request is approved</p>
+                <h3 className="text-gray-500 font-medium mb-2">Submit Requests</h3>
+                <p className="text-gray-400 text-sm">Earn 50 coins when your parking request is approved</p>
               </div>
               <div className="text-center p-4 bg-white bg-opacity-5 rounded-lg">
                 <div className="text-3xl mb-2">🎁</div>
-                <h3 className="text-white font-medium mb-2">Daily Bonus</h3>
-                <p className="text-gray-300 text-sm">Log in daily to earn bonus coins</p>
+                <h3 className="text-gray-500 font-medium mb-2">Daily Bonus</h3>
+                <p className="text-gray-400 text-sm">Log in daily to earn bonus coins</p>
               </div>
             </div>
           </div>

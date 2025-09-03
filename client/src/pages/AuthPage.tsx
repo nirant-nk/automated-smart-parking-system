@@ -64,10 +64,10 @@ export default function AuthPage() {
             <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl font-bold">P</span>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-black mb-2">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h1>
-            <p className="text-gray-200">
+            <p className="text-gray-500">
               {isLogin ? "Sign in to your ParkSmart account" : "Join ParkSmart community"}
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function AuthPage() {
                   name="name"
                   value={form.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                  className="w-full ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                   placeholder="Full Name"
                   disabled={loading}
                   required
@@ -94,7 +94,7 @@ export default function AuthPage() {
                 name="email"
                 value={form.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                className="w-full ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                 placeholder="Email Address"
                 disabled={loading}
                 required
@@ -108,7 +108,7 @@ export default function AuthPage() {
                   name="phone"
                   value={form.phone}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                  className="w-full ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                   placeholder="Phone Number"
                   disabled={loading}
                   required
@@ -122,7 +122,7 @@ export default function AuthPage() {
                 name="password"
                 value={form.password}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                className="w-full ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg  placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                 placeholder="Password"
                 disabled={loading}
                 required
@@ -136,7 +136,7 @@ export default function AuthPage() {
                   name="confirmPassword"
                   value={form.confirmPassword}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
+                  className="w-full  ring-1 ring-gray-300 px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white focus:bg-opacity-30"
                   placeholder="Confirm Password"
                   disabled={loading}
                   required
@@ -166,7 +166,7 @@ export default function AuthPage() {
                   confirmPassword: ""
                 });
               }}
-              className="text-green-300 hover:text-green-200 transition-colors"
+              className="text-green-500 hover:text-green-400 transition-colors"
               disabled={loading}
             >
               {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
@@ -175,11 +175,11 @@ export default function AuthPage() {
 
           <div className="mt-8 pt-6 border-t border-white border-opacity-20">
             <div className="text-center text-gray-200 text-sm">
-              <p>By continuing, you agree to our</p>
+              <p className="text-gray-500">By continuing, you agree to our</p>
               <div className="mt-2 space-x-2">
-                <a href="#" className="text-green-300 hover:text-green-200">Terms of Service</a>
-                <span>and</span>
-                <a href="#" className="text-green-300 hover:text-green-200">Privacy Policy</a>
+                <a href="#" className="text-green-500 hover:text-green-400">Terms of Service</a>
+                <span className="text-gray-500">and</span>
+                <a href="#" className="text-green-500 hover:text-green-400">Privacy Policy</a>
               </div>
             </div>
           </div>
