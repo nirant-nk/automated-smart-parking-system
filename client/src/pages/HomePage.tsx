@@ -46,7 +46,7 @@ export default function HomePage() {
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <input
@@ -74,31 +74,31 @@ export default function HomePage() {
           </div>
 
           {/* Map Section */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <ParkingMap onParkingSelect={handleParkingSelect} />
           </div>
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <div className="text-center">
                 <div className="text-4xl mb-4">📝</div>
-                <h3 className="text-xl font-semibold text-white mb-2">Request New Parking</h3>
-                <p className="text-neutral-900 mb-4">Suggest a new parking location in your area</p>
+                <h3 className="text-xl font-semibold text-black">Request New Parking</h3>
+                <p className="text-neutral-900 mb-4 text-xl">Suggest a new parking location in your area</p>
                 <button
                   onClick={() => navigate('/requests')}
                   className="bg-green-600 hover:bg-green-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
                 >
-                  Make Request
+                  Make a Request
                 </button>
               </div>
             </div>
 
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <div className="text-center">
                 <div className="text-4xl mb-4">💰</div>
-                <h3 className="text-xl font-semibold text-white mb-2">Wallet & Rewards</h3>
-                <p className="text-neutral-900 mb-4">Check your coin balance and transaction history</p>
+                <h3 className="text-xl font-semibold text-black">Wallet & Rewards</h3>
+                <p className="text-neutral-900 mb-4 text-xl">Check your coin balance and transaction history</p>
                 <button
                   onClick={() => navigate('/wallet')}
                   className="bg-yellow-600 hover:bg-yellow-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
@@ -108,16 +108,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <div className="text-center">
                 <div className="text-4xl mb-4">👤</div>
-                <h3 className="text-xl font-semibold text-white mb-2">Profile & Settings</h3>
-                <p className="text-neutral-900 mb-4">Manage your account and preferences</p>
+                <h3 className="text-xl font-semibold text-black ">Profile & Dashboard</h3>
+                <p className="text-neutral-900 text-xl mb-4">Your account analytics and preferences</p>
                 <button
                   onClick={() => navigate('/dashboard')}
                   className="bg-purple-600 hover:bg-purple-700 font-bold text-white px-6 py-2 rounded-lg transition-colors"
                 >
-                  View Profile
+                  Go to Dashboard
                 </button>
               </div>
             </div>

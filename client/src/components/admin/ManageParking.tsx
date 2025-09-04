@@ -5,7 +5,7 @@ import { deleteParking, getAllParkings } from "../../services/parkingService";
 export default function ManageParking() {
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useQuery({ queryKey: ["admin-parkings"], queryFn: () => getAllParkings({ limit: 100 }) });
-  const parkings = data?.parkings ?? [];
+  const parkings = data?.parkings ?? data ?? [];
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteParking(id),

@@ -13,9 +13,9 @@ export default function Navigation() {
   const navigationItems = [
     { name: 'Home', path: '/', icon: '🏠' },
     { name: 'Find Parking', path: '/parkings', icon: '🚗' },
-    { name: 'My Requests', path: '/requests', icon: '📝' },
+    { name: 'Requests', path: '/requests', icon: '📝' },
     { name: 'Wallet', path: '/wallet', icon: '💰' },
-    { name: 'Profile', path: '/profile', icon: '👤' },
+    { name: 'Dashboard', path: '/dashboard', icon: '📜' },
     // Owner-only entries
     ...(isOwner
       ? [

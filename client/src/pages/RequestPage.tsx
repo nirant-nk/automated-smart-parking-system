@@ -54,6 +54,8 @@ export default function RequestPage() {
     queryKey: ['user-requests'],
     queryFn: () => getUserRequests(),
   });
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'denied'>('all');
+  const filteredRequests = (requests || []).filter((r: any) => statusFilter === 'all' ? true : r.status === statusFilter);
 
   const createRequestMutation = useMutation({
     mutationFn: createRequest,
@@ -113,6 +115,18 @@ export default function RequestPage() {
       return;
     }
 
+    const normalizedCapacity = {
+      car: Number(formData.parkingDetails.capacity.car) || 0,
+      bus_truck: Number(formData.parkingDetails.capacity.bus_truck) || 0,
+      bike: Number(formData.parkingDetails.capacity.bike) || 0,
+    };
+
+    const normalizedHourlyRate = {
+      car: Number(formData.parkingDetails.hourlyRate.car) || 0,
+      bus_truck: Number(formData.parkingDetails.hourlyRate.bus_truck) || 0,
+      bike: Number(formData.parkingDetails.hourlyRate.bike) || 0,
+    };
+
     const requestData = {
       requestType: formData.requestType as "parking" | "no_parking",
       title: formData.title,
@@ -124,11 +138,11 @@ export default function RequestPage() {
       images: [],
       parkingDetails: formData.requestType === 'parking' ? {
         name: formData.parkingDetails.name,
-        capacity: formData.parkingDetails.capacity,
+        capacity: normalizedCapacity,
         parkingType: formData.parkingDetails.parkingType as "opensky" | "closedsky",
         paymentType: formData.parkingDetails.paymentType as "paid" | "free",
         ownershipType: formData.parkingDetails.ownershipType as "private" | "public",
-        hourlyRate: formData.parkingDetails.hourlyRate,
+        hourlyRate: normalizedHourlyRate,
         amenities: formData.parkingDetails.amenities as string[],
         operatingHours: formData.parkingDetails.operatingHours
       } : undefined
@@ -137,23 +151,26 @@ export default function RequestPage() {
     createRequestMutation.mutate(requestData);
   };
 
+  function setNestedValue<T extends Record<string, any>>(obj: T, path: string[], newValue: any): T {
+    if (path.length === 0) return obj;
+    const [key, ...rest] = path;
+    return {
+      ...obj,
+      [key]: rest.length === 0
+        ? newValue
+        : setNestedValue(obj[key] ?? {}, rest, newValue),
+    } as T;
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev as any)[parent],
-          [child]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    const { name } = e.target;
+    const rawValue = (e.target as HTMLInputElement).value;
+    const value = (e.target as HTMLInputElement).type === 'number' && rawValue !== ''
+      ? Number(rawValue)
+      : rawValue;
+
+    const path = name.split('.');
+    setFormData(prev => setNestedValue(prev as any, path, value));
   };
 
   const getStatusColor = (status: string) => {
@@ -184,7 +201,7 @@ export default function RequestPage() {
       <div className="p-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-black mb-2">My Requests</h1>
@@ -201,7 +218,7 @@ export default function RequestPage() {
 
           {/* New Request Form */}
           {showForm && (
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <h2 className="text-xl font-semibold text-black mb-4">Submit New Request</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -392,16 +409,20 @@ export default function RequestPage() {
           )}
 
           {/* Requests List */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <h2 className="text-xl font-semibold text-black mb-4">Your Requests</h2>
-            
+            <div className="flex gap-2 mb-4">
+              {(['all','pending','approved','denied'] as const).map(s => (
+                <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-1 rounded-md text-sm ${statusFilter===s? 'bg-gray-300 text-black ring-1' : 'bg-white bg-opacity-10 text-gray-700'}`}>{s[0].toUpperCase()+s.slice(1)}</button>
+              ))}
+            </div>
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
               </div>
-            ) : requests && requests.length > 0 ? (
+            ) : filteredRequests && filteredRequests.length > 0 ? (
               <div className="space-y-4">
-                {requests.map((request: any) => (
+                {filteredRequests.map((request: any) => (
                   <div key={request._id} className="bg-white bg-opacity-5 rounded-lg p-4 border border-white border-opacity-10">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div className="flex-1">

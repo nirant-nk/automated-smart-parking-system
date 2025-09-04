@@ -121,7 +121,7 @@ export async function getUserRequests(filters: RequestFilters = {}) {
   });
   
   const res = await api.get(`/requests/user/me?${params.toString()}`);
-  return res.data.data;
+  return res.data.data.requests;
 }
 
 export async function getRequestById(id: string) {

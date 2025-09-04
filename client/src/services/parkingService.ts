@@ -107,7 +107,7 @@ export async function getAllParkings(filters: ParkingFilters = {}) {
   });
   
   const res = await api.get(`/parkings?${params.toString()}`);
-  return res.data.data;
+  return res.data.data; // { parkings, pagination }
 }
 
 export async function getParkingById(id: string) {

@@ -40,69 +40,69 @@ export default function DashboardPage() {
       <div className="p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                <p className="text-gray-200">Welcome back, {user.name}!</p>
+                <h1 className="text-3xl font-bold text-black">Dashboard</h1>
+                <p className="text-gray-500">Welcome back, {user.name}!</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-green-400">{user.wallet.coins.toLocaleString()}</div>
-                <div className="text-gray-200 text-sm">Total Coins</div>
+                <div className="text-gray-500 text-sm">Total Coins</div>
               </div>
             </div>
           </div>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-3  border border-black border-opacity-20">
               <div className="flex items-center">
                 <div className="p-3 bg-blue-500 bg-opacity-20 rounded-lg">
                   <span className="text-2xl">🚗</span>
                 </div>
                 <div className="ml-4">
-                  <p className="text-gray-200 text-sm">Parking Visits</p>
-                  <p className="text-white text-2xl font-bold">0</p>
+                  <p className="text-black text-sm">Parking Visits</p>
+                  <p className="text-gray-500 text-2xl font-bold">0</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-3  border border-black border-opacity-20">
               <div className="flex items-center">
                 <div className="p-3 bg-green-500 bg-opacity-20 rounded-lg">
                   <span className="text-2xl">📝</span>
                 </div>
                 <div className="ml-4">
-                  <p className="text-gray-200 text-sm">Active Requests</p>
-                  <p className="text-white text-2xl font-bold">
+                  <p className="text-black text-sm">Active Requests</p>
+                  <p className="text-gray-500 text-2xl font-bold">
                     {recentRequests.filter((r: any) => r.status === 'pending').length}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-3  border border-black border-opacity-20">
               <div className="flex items-center">
                 <div className="p-3 bg-yellow-500 bg-opacity-20 rounded-lg">
                   <span className="text-2xl">✅</span>
                 </div>
                 <div className="ml-4">
-                  <p className="text-gray-200 text-sm">Approved Requests</p>
-                  <p className="text-white text-2xl font-bold">
+                  <p className="text-black text-sm">Approved Requests</p>
+                  <p className="text-gray-500 text-2xl font-bold">
                     {recentRequests.filter((r: any) => r.status === 'approved').length}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-3  border border-black border-opacity-20">
               <div className="flex items-center">
                 <div className="p-3 bg-purple-500 bg-opacity-20 rounded-lg">
                   <span className="text-2xl">💰</span>
                 </div>
                 <div className="ml-4">
-                  <p className="text-gray-200 text-sm">Coins Earned</p>
-                  <p className="text-white text-2xl font-bold">
+                  <p className="text-black text-sm">Coins Earned</p>
+                  <p className="text-gray-500 text-2xl font-bold">
                     {recentTransactions
                       .filter((t: any) => t.type === 'credit')
                       .reduce((sum: number, t: any) => sum + t.amount, 0)}
@@ -114,43 +114,43 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Quick Actions */}
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-              <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
+              <h2 className="text-xl font-semibold text-black mb-4">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-4">
                 <Link
                   to="/parkings"
                   className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-center transition-colors"
                 >
-                  <div className="text-2xl mb-2">🚗</div>
+                  <div className="text-3xl mb-2">🚗</div>
                   <div className="font-medium">Find Parking</div>
                 </Link>
                 <Link
                   to="/requests"
                   className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg text-center transition-colors"
                 >
-                  <div className="text-2xl mb-2">📝</div>
+                  <div className="text-3xl mb-2">📝</div>
                   <div className="font-medium">Make Request</div>
                 </Link>
                 <Link
                   to="/wallet"
                   className="bg-yellow-600 hover:bg-yellow-700 text-white p-4 rounded-lg text-center transition-colors"
                 >
-                  <div className="text-2xl mb-2">💰</div>
+                  <div className="text-3xl mb-2">💰</div>
                   <div className="font-medium">View Wallet</div>
                 </Link>
                 <Link
                   to="/parkings"
                   className="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg text-center transition-colors"
                 >
-                  <div className="text-2xl mb-2">📍</div>
+                  <div className="text-3xl mb-2">📍</div>
                   <div className="font-medium">Nearby</div>
                 </Link>
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-              <h2 className="text-xl font-semibold text-white mb-4">Recent Wallet Activity</h2>
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
+              <h2 className="text-xl font-semibold text-black mb-4">Recent Wallet Activity</h2>
               {recentTransactions.length > 0 ? (
                 <div className="space-y-3">
                   {recentTransactions.map((transaction: any, index: number) => (
@@ -159,13 +159,13 @@ export default function DashboardPage() {
                       className="flex justify-between items-center p-3 bg-white bg-opacity-5 rounded-lg"
                     >
                       <div>
-                        <p className="text-white font-medium">{transaction.description}</p>
-                        <p className="text-gray-200 text-sm">
+                        <p className="text-black font-medium">{transaction.description}</p>
+                        <p className="text-gray-500 text-sm">
                           {new Date(transaction.timestamp).toLocaleDateString()}
                         </p>
                       </div>
                       <div className={`font-medium ${
-                        transaction.type === 'credit' ? 'text-green-400' : 'text-red-400'
+                        transaction.type === 'credit' ? 'text-green-500' : 'text-red-500'
                       }`}>
                         {transaction.type === 'credit' ? '+' : '-'}{transaction.amount} coins
                       </div>
@@ -173,15 +173,15 @@ export default function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-200">No recent transactions</p>
+                <p className="text-gray-500">No recent transactions</p>
               )}
             </div>
           </div>
 
           {/* Recent Requests */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mt-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-white">Recent Requests</h2>
+              <h2 className="text-xl font-semibold text-black">Recent Requests</h2>
               <Link
                 to="/requests"
                 className="text-blue-400 hover:text-blue-300 text-sm"
@@ -195,14 +195,14 @@ export default function DashboardPage() {
                 {recentRequests.map((request: any) => (
                   <div key={request._id} className="flex justify-between items-center p-3 bg-white bg-opacity-5 rounded-lg">
                     <div>
-                      <p className="text-white font-medium">{request.title}</p>
-                      <p className="text-gray-300 text-sm">
+                      <p className="text-black font-medium">{request.title}</p>
+                      <p className="text-gray-500 text-sm">
                         {new Date(request.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' :
-                      request.status === 'approved' ? 'bg-green-500 bg-opacity-20 text-green-300' :
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium text-white font-bold ${
+                      request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 ' :
+                      request.status === 'approved' ? 'bg-green-500 bg-opacity-20 ' :
                       'bg-red-500 bg-opacity-20 text-red-300'
                     }`}>
                       {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
@@ -216,24 +216,24 @@ export default function DashboardPage() {
           </div>
 
           {/* User Info */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mt-6 border border-white border-opacity-20">
-            <h2 className="text-xl font-semibold text-white mb-4">Profile Information</h2>
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
+            <h2 className="text-xl font-semibold text-black mb-4">Profile Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-gray-300 text-sm">Name</label>
-                <p className="text-white font-medium">{user.name}</p>
+                <label className="text-gray-500 text-sm">Name</label>
+                <p className="text-black font-medium">{user.name}</p>
               </div>
               <div>
-                <label className="text-gray-300 text-sm">Email</label>
-                <p className="text-white font-medium">{user.email}</p>
+                <label className="text-gray-500 text-sm">Email</label>
+                <p className="text-black font-medium">{user.email}</p>
               </div>
               <div>
-                <label className="text-gray-300 text-sm">Phone</label>
-                <p className="text-white font-medium">{user.phone}</p>
+                <label className="text-gray-500 text-sm">Phone</label>
+                <p className="text-black font-medium">{user.phone}</p>
               </div>
               <div>
-                <label className="text-gray-300 text-sm">Role</label>
-                <p className="text-white font-medium capitalize">{user.role}</p>
+                <label className="text-gray-500 text-sm">Role</label>
+                <p className="text-black font-medium capitalize">{user.role}</p>
               </div>
             </div>
           </div>

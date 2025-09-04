@@ -4,15 +4,21 @@ import { approveRequest, denyRequest, getAllRequests } from "../../services/requ
 export default function ManageRequests() {
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useQuery({ queryKey: ["admin-requests"], queryFn: () => getAllRequests({ limit: 100 }) });
-  const requests = data?.requests ?? [];
+  const requests = data?.requests ?? data ?? [];
 
   const approveMutation = useMutation({
     mutationFn: (vars: { id: string; coinsAwarded: number; notes?: string }) => approveRequest(vars.id, { coinsAwarded: vars.coinsAwarded, adminNotes: vars.notes }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-requests"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["user-requests"] });
+    },
   });
   const denyMutation = useMutation({
     mutationFn: (vars: { id: string; notes: string }) => denyRequest(vars.id, { adminNotes: vars.notes }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-requests"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["user-requests"] });
+    },
   });
 
   return (
@@ -29,16 +35,16 @@ export default function ManageRequests() {
       ) : (
         <div className="space-y-3">
           {requests.map((r: any) => (
-            <div key={r._id} className="bg-white bg-opacity-5 rounded-lg p-4 border border-white border-opacity-10">
+            <div key={r._id} className="bg-white bg-opacity-5 rounded-lg p-4 border border-gray-300 ring-1 border-opacity-10">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-white font-semibold">{r.title}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${r.status === 'approved' ? 'bg-green-500 bg-opacity-20 text-green-300' : r.status === 'denied' ? 'bg-red-500 bg-opacity-20 text-red-300' : 'bg-yellow-500 bg-opacity-20 text-yellow-300'}`}>{r.status}</span>
+                    <h3 className="text-black font-semibold">{r.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold text-white ${r.status === 'approved' ? 'bg-green-500 bg-opacity-20 ' : r.status === 'denied' ? 'bg-red-500 bg-opacity-20' : 'bg-yellow-500 bg-opacity-20 '}`}>{r.status}</span>
                   </div>
-                  <p className="text-gray-200 text-sm">{r.description}</p>
+                  <p className="text-gray-500 text-sm">{r.description}</p>
                 </div>
-                <div className="text-right text-sm text-gray-200">
+                <div className="text-right text-sm text-gray-500">
                   <div>Type: {r.requestType}</div>
                   <div>By: {r.user?.name}</div>
                 </div>

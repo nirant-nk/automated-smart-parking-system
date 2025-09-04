@@ -50,13 +50,13 @@ export default function WalletPage() {
       <div className="p-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <h1 className="text-3xl font-bold text-black mb-2">Wallet</h1>
             <p className="text-gray-500">Manage your in-app currency and transactions</p>
           </div>
 
           {/* Balance Card */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="text-center">
               <h2 className="text-2xl font-semibold text-black mb-2">Coin Balance</h2>
               <div className="text-5xl font-bold text-green-400 mb-4">
@@ -76,7 +76,7 @@ export default function WalletPage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
               <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction History</h2>
 
@@ -207,7 +207,7 @@ export default function WalletPage() {
           </div>
 
           {/* How to Earn */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mt-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <h2 className="text-xl font-semibold text-black mb-4">How to Earn Coins</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-white bg-opacity-5 rounded-lg">

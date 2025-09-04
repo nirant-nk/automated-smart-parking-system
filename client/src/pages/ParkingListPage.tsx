@@ -79,7 +79,7 @@ export default function ParkingListPage() {
       <div className="p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-black mb-2">Parking Spaces</h1>
@@ -90,11 +90,11 @@ export default function ParkingListPage() {
               <div className="flex bg-white bg-opacity-10 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('map')}
-                  className={`px-4 py-2 rounded-md transition-colors ${
+                  className={`px-4 py-2 rounded-md transition-colors m-1 ${
                     viewMode === 'map'
-                      ? 'bg-white bg-opacity-20 text-black'
-                      : 'text-gray-500 hover:font-bold hover:text-black hover:bg-gray-300 active:bg-gray-300' 
-                  }`}
+                      ? ' bg-opacity-20 text-black '
+                      : 'text-gray-500 hover:font-bold hover:text-black hover:bg-gray-300 ' 
+                  } ${viewMode=='map'? 'bg-gray-300 ring-1':'bg-white'}`}
                 >
                   🗺️ Map
                 </button>
@@ -102,9 +102,9 @@ export default function ParkingListPage() {
                   onClick={() => setViewMode('list')}
                   className={`px-4 py-2 rounded-md transition-colors ${
                     viewMode === 'list'
-                      ? 'bg-white bg-opacity-20 text-black'
+                      ? ' bg-opacity-20 text-black'
                       : 'text-gray-500 hover:font-bold hover:text-black hover:bg-gray-300 active:bg-gray-300'
-                  }`}
+                  } ${viewMode=='list'? 'bg-gray-300 ring-1':'bg-white'} ` }
                 >
                   📋 List
                 </button>
@@ -113,7 +113,7 @@ export default function ParkingListPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
+          <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <input
                 type="text"
@@ -164,14 +164,14 @@ export default function ParkingListPage() {
 
           {/* Results Count */}
           <div className="mb-4">
-            <p className="text-gray-300">
+            <p className="text-white font-bold ">
               Found {filteredParkings.length} parking space{filteredParkings.length !== 1 ? 's' : ''}
             </p>
           </div>
 
           {/* Content */}
           {viewMode === 'map' ? (
-            <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <ParkingMap onParkingSelect={handleParkingSelect} />
             </div>
           ) : (
