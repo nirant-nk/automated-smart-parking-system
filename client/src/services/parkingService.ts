@@ -152,6 +152,11 @@ export async function deleteParking(id: string) {
   return res.data;
 }
 
+export async function approveParking(id: string) {
+  const res = await api.put(`/parkings/${id}/approve`);
+  return res.data.data;
+}
+
 export async function updateVehicleCount(parkingId: string, vehicleType: "car" | "bus_truck" | "bike", count: number) {
   const res = await api.put(`/parkings/${parkingId}/vehicle-count`, {
     vehicleType,

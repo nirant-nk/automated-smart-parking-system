@@ -172,7 +172,7 @@ export default function ParkingListPage() {
           {/* Content */}
           {viewMode === 'map' ? (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
-              <ParkingMap onParkingSelect={handleParkingSelect} />
+              <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={filters.search} />
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

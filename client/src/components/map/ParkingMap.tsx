@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { getAllParkings } from '../../services/parkingService';
+import { getAllRequests } from '../../services/requestService';
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -28,6 +29,17 @@ const createParkingIcon = (isAvailable: boolean) => {
   });
 };
 
+const createNoParkingIcon = () => {
+  return L.divIcon({
+    className: 'custom-no-parking-marker',
+    html: `<div class="w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-red-600">
+      <span class="text-white text-[10px] font-bold">NP</span>
+    </div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
+};
+
 // Component to center map on user location
 function MapCenter({ center }: { center: [number, number] }) {
   const map = useMap();
@@ -44,12 +56,17 @@ function MapCenter({ center }: { center: [number, number] }) {
 interface ParkingMapProps {
   onParkingSelect?: (parking: any) => void;
   showUserLocation?: boolean;
+  searchTerm?: string;
 }
 
-export default function ParkingMap({ onParkingSelect, showUserLocation = true }: ParkingMapProps) {
+export default function ParkingMap({ onParkingSelect, showUserLocation = true, searchTerm = '' }: ParkingMapProps) {
   const { data: parkings, isLoading, error } = useQuery({
     queryKey: ['parkings'],
     queryFn: () => getAllParkings(),
+  });
+  const { data: noParkingData } = useQuery({
+    queryKey: ['no-parking-requests', 'approved'],
+    queryFn: () => getAllRequests({ status: 'approved', requestType: 'no_parking', limit: 200 }),
   });
   
   const { location: userLocation, loading: locationLoading } = useGeolocation();
@@ -83,7 +100,15 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true }:
     );
   }
 
-  const parkingList = parkings?.parkings || [];
+  const parkingListRaw = parkings?.parkings || [];
+  const parkingList = searchTerm
+    ? parkingListRaw.filter((p: any) =>
+        (p.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (p.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (p.location?.address?.street?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+      )
+    : parkingListRaw;
+  const noParkingList = (noParkingData?.requests ?? noParkingData ?? []).filter((r: any) => r.location?.coordinates?.length === 2);
 
   return (
     <div className="relative">
@@ -159,6 +184,22 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true }:
                     View Details
                   </button>
                 )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {noParkingList.map((req: any) => (
+          <Marker
+            key={req._id}
+            position={[req.location.coordinates[1], req.location.coordinates[0]]}
+            icon={createNoParkingIcon()}
+          >
+            <Popup>
+              <div className="p-2">
+                <h3 className="font-bold text-lg mb-1">No Parking Zone</h3>
+                <p className="text-gray-600 text-sm mb-1">{req.title}</p>
+                <p className="text-gray-600 text-xs">Approved on {new Date(req.approvedAt || req.updatedAt).toLocaleDateString()}</p>
               </div>
             </Popup>
           </Marker>

@@ -200,7 +200,7 @@ export default function DashboardPage() {
                         {new Date(request.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium text-white font-bold ${
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold text-white  ${
                       request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 ' :
                       request.status === 'approved' ? 'bg-green-500 bg-opacity-20 ' :
                       'bg-red-500 bg-opacity-20 text-red-300'
