@@ -14,6 +14,8 @@ export default function HomePage() {
 
   if (!user) {
     return (
+      // TODO: Make a user-friendly & pleasing homepage with hero section and ellaborating features
+      // TODO: Remaining to properly integrate cv-model counts in frontend
       <Layout showNavigation={false}>
         <div className="min-h-screen flex items-center justify-center p-4">
           <div className="text-center">
