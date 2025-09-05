@@ -5,6 +5,7 @@ import {
     deleteRequest,
     denyRequest,
     getAllRequests,
+    getApprovedRequests,
     getNearbyRequests,
     getPendingRequests,
     getRequestById,
@@ -25,7 +26,10 @@ import {
 
 const router = express.Router();
 
-// All routes require authentication
+// Public routes (no authentication required)
+router.get('/approved', validateQueryParams, getApprovedRequests);
+
+// All other routes require authentication
 router.use(authenticate);
 
 // Request management routes

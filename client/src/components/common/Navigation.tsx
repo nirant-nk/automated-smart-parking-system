@@ -7,8 +7,7 @@ export default function Navigation() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isOwner = !!user && Array.isArray(user.ownedParkings) && user.ownedParkings.length > 0;
-  const isAdminOrOwner = user?.role === 'admin' || isOwner;
+  const isAdmin = user?.role === 'admin' ;
 
   const navigationItems = [
     { name: 'Home', path: '/', icon: '🏠' },
@@ -17,12 +16,7 @@ export default function Navigation() {
     { name: 'Wallet', path: '/wallet', icon: '💰' },
     { name: 'Dashboard', path: '/dashboard', icon: '📜' },
     // Owner-only entries
-    ...(isOwner
-      ? [
-          { name: 'My Parkings', path: '/owner/parkings', icon: '🏢' },
-          { name: 'Add Parking', path: '/owner/parkings/new', icon: '➕' },
-        ]
-      : []),
+
   ];
 
   const handleLogout = async () => {
@@ -102,26 +96,15 @@ export default function Navigation() {
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
                     <p className="text-sm text-gray-800">{user.email}</p>
                   </div>
-                  {isAdminOrOwner && (
+                  {isAdmin && (
                     <Link to="/admin" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                      📊 Dashboard
+                      📊 Admin Dashboard
                     </Link>
                   )}
                   <Link to="/profile" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
                     👤 Profile
                   </Link>
-                  {/* Owner quick links */}
-                  {isOwner && (
-                    <div className="py-1">
-                      <Link to="/owner/parkings" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                        🏢 My Parkings
-                      </Link>
-                      <Link to="/owner/parkings/new" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                        ➕ Add Parking
-                      </Link>
-                      <div className="my-1 border-t border-gray-200" />
-                    </div>
-                  )}
+
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -171,7 +154,7 @@ export default function Navigation() {
                 >
                   👤 Profile
                 </Link>
-                {isAdminOrOwner && (
+                {isAdmin && (
                   <Link
                     to="/admin"
                     onClick={() => setIsMenuOpen(false)}

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import ParkingMap from "../components/map/ParkingMap";
 import { getAllParkings } from "../services/parkingService";
+import { getApprovedRequests } from "../services/requestService";
 
 export default function ParkingListPage() {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
@@ -18,6 +19,11 @@ export default function ParkingListPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["parkings"],
     queryFn: () => getAllParkings()
+  });
+
+  const { data: noParkingData } = useQuery({
+    queryKey: ["no-parking-requests", "approved-cards"],
+    queryFn: () => getApprovedRequests({ requestType: "no_parking", limit: 200 }),
   });
 
   const handleParkingSelect = (parking: any) => {
@@ -175,47 +181,83 @@ export default function ParkingListPage() {
               <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={filters.search} />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               {filteredParkings.map((parking: any) => (
                 <div key={parking._id} className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20 hover:bg-opacity-20 transition-all">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-semibold text-white">{parking.name}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      parking.isFull ? 'bg-red-500 bg-opacity-20 text-red-300' : 'bg-green-500 bg-opacity-20 text-green-300'
+                    <h3 className="text-xl font-bold text-black">{parking.name}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                      parking.isFull ? 'bg-red-500 bg-opacity-20 text-white ' : 'bg-green-500 bg-opacity-20 text-white'
                     }`}>
                       {parking.isFull ? 'Full' : 'Available'}
                     </span>
                   </div>
                   
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">{parking.description}</p>
+                  <p className="text-gray-500  mb-4 line-clamp-2">{parking.description}</p>
                   
                   <div className="space-y-2 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">Type:</span>
-                      <span className="text-white capitalize">{parking.parkingType}</span>
+                    <div className="flex   ">
+                      <span className="text-black">Type :</span>
+                      <span className="text-gray-800 capitalize">- {parking.parkingType}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">Payment:</span>
-                      <span className="text-white capitalize">{parking.paymentType}</span>
+                    <div className="flex  ">
+                      <span className="text-black">Payment :</span>
+                      <span className="text-gray-800 capitalize">- {parking.paymentType}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">Capacity:</span>
-                      <span className="text-white">{parking.capacity?.car || 0} cars</span>
+                    <div className="flex  ">
+                      <span className="text-black">Capacities :</span>
+                      <span className="text-gray-800">- {parking.capacity?.car || 0} cars, {parking.capacity?.bike || 0} bikes & {parking.capacity?.bus_truck || 0} bus/trucks.</span>
                     </div>
                     {parking.availableSpaces && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-300">Available:</span>
-                        <span className="text-white">{parking.availableSpaces.car} cars</span>
+                      <>
+                      <div className="flex  ">
+                        <span className="text-black">Available Car Slots:</span>
+                        <span className="text-gray-800">- {parking.availableSpaces.car} cars</span>
                       </div>
+                      <div className="flex  ">
+                        <span className="text-black">Available Bike Slots:</span>
+                        <span className="text-gray-800">- {parking.availableSpaces.bike} bikes</span>
+                      </div>
+                      <div className="flex  ">
+                        <span className="text-black">Available Bus/Truck Slots:</span>
+                        <span className="text-gray-800">- {parking.availableSpaces.bus_truck} bus/trucks</span>
+                      </div>
+                      </>
+                      
                     )}
                   </div>
                   
                   <button
                     onClick={() => navigate(`/parkings/${parking._id}`)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+                    className="w-full bg-blue-600 font-bold hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
                   >
                     View Details
                   </button>
+                </div>
+              ))}
+
+              {/* Approved No-Parking Zones */}
+              {(noParkingData?.requests ?? noParkingData ?? []).map((req: any) => (
+                <div key={req._id} className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20 hover:bg-opacity-20 transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-semibold text-white">No Parking: {req.title}</h3>
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-500 bg-opacity-20 text-red-300">
+                      No Parking
+                    </span>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">{req.description}</p>
+                  <div className="space-y-2 mb-4 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Approved</span>
+                      <span className="text-white">{new Date(req.approvedAt || req.updatedAt).toLocaleDateString()}</span>
+                    </div>
+                    {req.noParkingDetails?.reason && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">Reason</span>
+                        <span className="text-white capitalize">{req.noParkingDetails.reason}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

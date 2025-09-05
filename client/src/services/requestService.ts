@@ -141,6 +141,18 @@ export async function getAllRequests(filters: RequestFilters = {}) {
   return res.data.data;
 }
 
+export async function getApprovedRequests(filters: RequestFilters = {}) {
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined) {
+      params.append(key, value.toString());
+    }
+  });
+  
+  const res = await api.get(`/requests/approved?${params.toString()}`);
+  return res.data.data;
+}
+
 export async function getPendingRequests(filters: RequestFilters = {}) {
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {

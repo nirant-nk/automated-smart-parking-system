@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { ERROR_MESSAGES, USER_ROLES, JWT_EXPIRES_IN } from '../constants.js';
+import { ERROR_MESSAGES, JWT_EXPIRES_IN, USER_ROLES } from '../constants.js';
 import User from '../models/User.js';
 
 // Generate JWT token

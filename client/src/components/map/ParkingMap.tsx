@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { getAllParkings } from '../../services/parkingService';
-import { getAllRequests } from '../../services/requestService';
+import { getApprovedRequests } from '../../services/requestService';
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -66,7 +66,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
   });
   const { data: noParkingData } = useQuery({
     queryKey: ['no-parking-requests', 'approved'],
-    queryFn: () => getAllRequests({ status: 'approved', requestType: 'no_parking', limit: 200 }),
+    queryFn: () => getApprovedRequests({ requestType: 'no_parking', limit: 200 }),
   });
   
   const { location: userLocation, loading: locationLoading } = useGeolocation();
@@ -237,6 +237,10 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
             <span>Full</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+            <span>No Parking Zone</span>
           </div>
           {showUserLocation && (
             <div className="flex items-center space-x-2">

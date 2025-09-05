@@ -225,7 +225,8 @@ export const updateParking = asyncHandler(async (req, res) => {
 export const deleteParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
 
-  const parking = await Parking.findByIdOrParkingId(parkingId);
+
+  const parking = await Parking.findOne(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);

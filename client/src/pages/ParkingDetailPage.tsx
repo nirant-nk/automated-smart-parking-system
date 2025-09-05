@@ -6,7 +6,7 @@ import Layout from "../components/common/Layout";
 import { useAuth } from "../hooks/useAuth";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { getParkingById } from "../services/parkingService";
-import { recordVisit } from "../services/visitService";
+import { getUserVisits, recordVisit } from "../services/visitService";
 
 export default function ParkingDetailPage() {
   const { id } = useParams();
@@ -20,6 +20,17 @@ export default function ParkingDetailPage() {
     queryFn: () => getParkingById(id!),
     enabled: !!id,
   });
+
+  // Fetch user's visits for this parking to determine if already checked in
+  const { data: userVisitsForParking } = useQuery({
+    queryKey: ["userVisitsForParking", id, user?._id],
+    queryFn: () => getUserVisits({ parkingId: id!, limit: 5 }),
+    enabled: !!id && !!user,
+  });
+
+  const isAlreadyCheckedIn = !!userVisitsForParking?.some(
+    (visit: any) => visit?.parking?._id === id && (visit?.coinsEarned ?? 0) > 0
+  );
 
   const handleCheckIn = async () => {
     if (!user || !parking || !userLocation) {
@@ -115,12 +126,12 @@ export default function ParkingDetailPage() {
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white mb-2">{parking.name}</h1>
-                <p className="text-gray-200">{parking.description}</p>
+                <h1 className="text-3xl font-bold text-black mb-2">{parking.name}</h1>
+                <p className="text-gray-500">{parking.description}</p>
               </div>
               <button
                 onClick={() => navigate('/parkings')}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-gray-600 hover:bg-gray-700 font-bold text-white px-4 py-2 rounded-lg transition-colors"
               >
                 ← Back to Parkings
               </button>
@@ -133,55 +144,71 @@ export default function ParkingDetailPage() {
               {/* Status Card */}
               <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white">Parking Status</h2>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <h2 className="text-xl font-semibold text-black">Parking Status</h2>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                     parking.isFull 
-                      ? 'bg-red-500 bg-opacity-20 text-red-300' 
-                      : 'bg-green-500 bg-opacity-20 text-green-300'
+                      ? 'bg-red-500 bg-opacity-20 text-white' 
+                      : 'bg-green-500 bg-opacity-20 text-white'
                   }`}>
                     {parking.isFull ? 'Full' : 'Available'}
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/*Total & Availability*/}
+                <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                  <div className="text-center"></div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{parking.capacity?.car || 0}</div>
-                    <div className="text-gray-200 text-sm">Total Car Spots</div>
+                    <div className="text-2xl font-bold text-black">Total</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{parking.availableSpaces?.car || 0}</div>
-                    <div className="text-gray-200 text-sm">Available Car Spots</div>
+                    <div className="text-2xl font-bold text-black">Available</div>
+                  </div>
+                  <div className="text-2xl font-bold text-black">Car</div>
+                  <div className="text-center">
+                    <div className="text-center text-2xl">{parking.capacity?.car || 0}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{parking.capacity?.bike || 0}</div>
-                    <div className="text-gray-200 text-sm">Bike Spots</div>
+                    <div className="text-center text-2xl">{parking.availableSpaces?.car || 0}</div>
+                  </div>
+                  <div className="text-2xl font-bold text-black">Bike</div>
+                  <div className="text-center">
+                    <div className="text-center text-2xl">{parking.capacity?.bike || 0}</div>
+
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{parking.capacity?.bus_truck || 0}</div>
-                    <div className="text-gray-200 text-sm">Bus/Truck Spots</div>
+                    <div className="text-center text-2xl">{parking.availableSpaces?.bike || 0}</div>
+
+                  </div>
+                  <div className="text-2xl font-bold text-black">Bus/Truck</div>
+                  <div className="text-center">
+                    <div className="text-center text-2xl">{parking.capacity?.bus_truck || 0}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-center text-2xl">{parking.availableSpaces?.bus_truck || 0}</div>
+                    
                   </div>
                 </div>
               </div>
 
               {/* Details Card */}
               <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                <h2 className="text-xl font-semibold text-white mb-4">Parking Details</h2>
+                <h2 className="text-xl font-bold text-black mb-4">Parking Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-gray-300 text-sm">Type</label>
-                    <p className="text-white font-medium capitalize">{parking.parkingType}</p>
+                    <label className="text-black text-sm">Type</label>
+                    <p className="text-gray-500 font-medium capitalize">{parking.parkingType}</p>
                   </div>
                   <div>
-                    <label className="text-gray-300 text-sm">Payment</label>
-                    <p className="text-white font-medium capitalize">{parking.paymentType}</p>
+                    <label className="text-black text-sm">Payment</label>
+                    <p className="text-gray-500 font-medium capitalize">{parking.paymentType}</p>
                   </div>
                   <div>
-                    <label className="text-gray-300 text-sm">Ownership</label>
-                    <p className="text-white font-medium capitalize">{parking.ownershipType}</p>
+                    <label className="text-black text-sm">Ownership</label>
+                    <p className="text-gray-500 font-medium capitalize">{parking.ownershipType}</p>
                   </div>
                   <div>
-                    <label className="text-gray-300 text-sm">Last Updated</label>
-                    <p className="text-white font-medium">
+                    <label className="text-black text-sm">Last Updated</label>
+                    <p className="text-gray-500 font-medium">
                       {new Date(parking.lastUpdated).toLocaleDateString()}
                     </p>
                   </div>
@@ -189,8 +216,8 @@ export default function ParkingDetailPage() {
 
                 {parking.location.address && (
                   <div className="mt-4">
-                    <label className="text-gray-300 text-sm">Address</label>
-                    <p className="text-white font-medium">
+                    <label className="text-black text-sm">Address</label>
+                    <p className="text-gray-500 font-medium">
                       {parking.location.address.street}, {parking.location.address.city}, {parking.location.address.state}
                     </p>
                   </div>
@@ -198,8 +225,8 @@ export default function ParkingDetailPage() {
 
                 {distance !== null && (
                   <div className="mt-4">
-                    <label className="text-gray-300 text-sm">Distance from you</label>
-                    <p className="text-white font-medium">{distance}m away</p>
+                    <label className="text-black text-sm">Distance from you</label>
+                    <p className="text-gray-500 font-medium">{distance}m away</p>
                   </div>
                 )}
               </div>
@@ -230,20 +257,34 @@ export default function ParkingDetailPage() {
             <div className="space-y-6">
               {/* Check-in Card */}
               <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                <h2 className="text-xl font-semibold text-white mb-4">Check In</h2>
-                <p className="text-gray-300 text-sm mb-4">
+                <h2 className="text-xl font-bold text-black mb-4">Check In</h2>
+                <p className="text-gray-500  mb-4">
                   Check in to earn coins and track your parking visits
                 </p>
                 <button
                   onClick={handleCheckIn}
-                  disabled={isCheckingIn || parking.isFull || !userLocation}
+                  disabled={
+                    isCheckingIn ||
+                    parking.isFull ||
+                    !userLocation ||
+                    isAlreadyCheckedIn
+                  }
                   className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg transition-colors"
                 >
-                  {isCheckingIn ? 'Checking In...' : 'Check In & Earn Coins'}
+                  {isCheckingIn
+                    ? 'Checking In...'
+                    : isAlreadyCheckedIn
+                    ? 'Already Checked In'
+                    : 'Check In & Earn Coins'}
                 </button>
                 {!userLocation && (
                   <p className="text-red-400 text-xs mt-2">
                     Location access required for check-in
+                  </p>
+                )}
+                {isAlreadyCheckedIn && (
+                  <p className="text-gray-300 text-xs mt-2">
+                    You have already earned coins for this parking.
                   </p>
                 )}
               </div>
@@ -251,15 +292,15 @@ export default function ParkingDetailPage() {
               {/* Owner Info */}
               {parking.owner && (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                  <h2 className="text-xl font-semibold text-white mb-4">Parking Owner</h2>
+                  <h2 className="text-xl font-semibold text-black mb-4">Parking Owner</h2>
                   <div className="space-y-2">
                     <div>
-                      <label className="text-gray-300 text-sm">Name</label>
-                      <p className="text-white font-medium">{parking.owner.name}</p>
+                      <label className="text-black text-sm">Name</label>
+                      <p className="text-gray-500 font-medium">{parking.owner.name}</p>
                     </div>
                     <div>
-                      <label className="text-gray-300 text-sm">Email</label>
-                      <p className="text-white font-medium">{parking.owner.email}</p>
+                      <label className="text-black text-sm">Email</label>
+                      <p className="text-gray-500 font-medium">{parking.owner.email}</p>
                     </div>
                   </div>
                 </div>
@@ -267,19 +308,19 @@ export default function ParkingDetailPage() {
 
               {/* Statistics */}
               <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                <h2 className="text-xl font-semibold text-white mb-4">Statistics</h2>
+                <h2 className="text-xl font-semibold text-black mb-4">Statistics</h2>
                 <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Total Visits</span>
-                    <span className="text-white font-medium">{parking.statistics?.totalVisits || 0}</span>
+                  <div className="flex justify-items-end-safe">
+                    <span className="text-gray-800">Total Visits :</span>
+                    <span className="text-gray-500 font-medium">- {parking.statistics?.totalVisits || 0}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Average Occupancy</span>
-                    <span className="text-white font-medium">{parking.statistics?.averageOccupancy || 0}%</span>
+                  <div className="flex justify-items-end-safe">
+                    <span className="text-gray-800">Average Occupancy :</span>
+                    <span className="text-gray-500 font-medium">- {parking.statistics?.averageOccupancy || 0}%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Current Occupancy</span>
-                    <span className="text-white font-medium">{parking.occupancyPercentage || 0}%</span>
+                  <div className="flex justify-items-end-safe">
+                    <span className="text-gray-800">Current Occupancy :</span>
+                    <span className="text-gray-500 font-medium">- {parking.occupancyPercentage || 0}%</span>
                   </div>
                 </div>
               </div>

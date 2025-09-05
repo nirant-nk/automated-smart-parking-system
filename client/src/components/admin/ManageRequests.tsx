@@ -29,7 +29,10 @@ export default function ManageRequests() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
         </div>
       ) : error ? (
-        <div className="text-red-300">Failed to load requests</div>
+        <div className="text-red-300">
+          <div className="mb-1">Failed to load requests</div>
+          <div className="text-xs text-red-200 break-all">{(error as any)?.response?.data?.message || (error as any)?.message || 'Unknown error'}</div>
+        </div>
       ) : requests.length === 0 ? (
         <div className="text-gray-500">No requests</div>
       ) : (

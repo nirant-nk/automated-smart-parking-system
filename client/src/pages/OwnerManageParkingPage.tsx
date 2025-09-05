@@ -40,22 +40,22 @@ export default function OwnerManageParkingPage() {
             <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-white">Manage: {parking.name}</h1>
-                  <p className="text-gray-200 text-sm">Parking ID: {parking.parkingId}</p>
+                  <h1 className="text-2xl font-bold text-black">Manage: {parking.name}</h1>
+                  <p className="text-gray-500 text-sm">Parking ID: {parking.parkingId}</p>
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${parking.isApproved ? "bg-green-500 bg-opacity-20 text-green-300" : "bg-yellow-500 bg-opacity-20 text-yellow-300"}`}>
+                <span className={`px-2 py-1 rounded-full text-xs text-white font-bold ${parking.isApproved ? "bg-green-500 bg-opacity-20 text-white font-bold" : "bg-yellow-500 bg-opacity-20 text-white font-bold"}`}>
                   {parking.isApproved ? "Approved" : "Pending"}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {(["car", "bike", "bus_truck"] as const).map(v => (
-                  <div key={v} className="bg-white bg-opacity-5 rounded-lg p-4 border border-white border-opacity-10">
+                  <div key={v} className="bg-white bg-opacity-5 rounded-lg p-4 border ring-1 border-gray-600 border-opacity-10">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="text-white font-semibold capitalize">{v.replace("_", "/")}</h3>
-                      <div className="text-sm text-white">capacity: {parking.capacity[v]}</div>
+                      <h3 className="text-black font-semibold capitalize">{v.replace("_", "/")}</h3>
+                      <div className="text-sm text-black">capacity: {parking.capacity[v]}</div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-3">{parking.currentCount[v]}</div>
+                    <div className="text-3xl font-bold text-gray-500 mb-3">{parking.currentCount[v]}</div>
                     <div className="grid grid-cols-3 gap-2">
                       <button onClick={() => decMutation.mutate({ vehicleType: v, dec: 1 })} className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg">-1</button>
                       <button onClick={() => incMutation.mutate({ vehicleType: v, inc: 1 })} className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg">+1</button>

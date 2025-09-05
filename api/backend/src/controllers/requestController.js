@@ -1,6 +1,8 @@
 import { COIN_REWARDS, SUCCESS_MESSAGES } from '../constants.js';
 import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
+import Parking from '../models/Parking.js';
 import Request from '../models/Request.js';
+import User from '../models/User.js';
 
 // @desc    Create a new request
 // @route   POST /api/requests
@@ -65,6 +67,53 @@ export const getAllRequests = asyncHandler(async (req, res) => {
     .populate('user', 'name email phone')
     .populate('approvedBy', 'name email')
     .populate('deniedBy', 'name email')
+    .sort({ createdAt: -1 })
+    .limit(limit * 1)
+    .skip((page - 1) * limit);
+
+  const total = await Request.countDocuments(query);
+
+  res.json({
+    success: true,
+    data: {
+      requests,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    }
+  });
+});
+
+// @desc    Get approved requests (public)
+// @route   GET /api/requests/approved
+// @access  Public
+export const getApprovedRequests = asyncHandler(async (req, res) => {
+  const {
+    page = 1,
+    limit = 20,
+    requestType,
+    search
+  } = req.query;
+
+  const query = { 
+    isActive: true,
+    status: 'approved'
+  };
+
+  if (requestType) query.requestType = requestType;
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ];
+  }
+
+  const requests = await Request.find(query)
+    .populate('user', 'name email phone')
+    .populate('approvedBy', 'name email')
     .sort({ createdAt: -1 })
     .limit(limit * 1)
     .skip((page - 1) * limit);
@@ -215,6 +264,33 @@ export const approveRequest = asyncHandler(async (req, res) => {
 
   // Approve request
   await request.approve(req.user._id, coinsToAward, adminNotes);
+
+  // If it's a parking request, create the actual parking
+  if (request.requestType === 'parking' && request.parkingDetails) {
+    const parkingData = {
+      name: request.parkingDetails.name || request.title,
+      description: request.description,
+      location: request.location,
+      parkingType: request.parkingDetails.parkingType,
+      paymentType: request.parkingDetails.paymentType,
+      ownershipType: request.parkingDetails.ownershipType,
+      capacity: request.parkingDetails.capacity,
+      hourlyRate: request.parkingDetails.hourlyRate,
+      amenities: request.parkingDetails.amenities || [],
+      operatingHours: request.parkingDetails.operatingHours,
+      owner: request.user._id,
+      isApproved: true,
+      approvedBy: req.user._id,
+      approvedAt: new Date()
+    };
+
+    const parking = await Parking.create(parkingData);
+
+    // Add parking to user's owned parkings
+    await User.findByIdAndUpdate(request.user._id, {
+      $push: { ownedParkings: parking._id }
+    });
+  }
 
   // Award coins to user
   if (coinsToAward > 0) {

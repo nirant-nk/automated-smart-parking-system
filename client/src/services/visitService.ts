@@ -65,7 +65,8 @@ export async function getUserVisits(filters: VisitFilters = {}) {
   });
   
   const res = await api.get(`/visits/user/me?${params.toString()}`);
-  return res.data.data;
+  // API returns { data: { visits, pagination } }
+  return res.data.data.visits;
 }
 
 export async function getVisitById(id: string) {
