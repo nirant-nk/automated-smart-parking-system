@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import ParkingMap from "../components/map/ParkingMap";
+import { useParkingUpdates } from "../hooks/useParkingUpdates";
 import { getAllParkings } from "../services/parkingService";
 import { getApprovedRequests } from "../services/requestService";
 
@@ -15,6 +16,9 @@ export default function ParkingListPage() {
     search: ''
   });
   const navigate = useNavigate();
+  
+  // Real-time parking updates for all parkings
+  const { getAllParkingUpdates, isConnected } = useParkingUpdates();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["parkings"],
@@ -26,11 +30,28 @@ export default function ParkingListPage() {
     queryFn: () => getApprovedRequests({ requestType: "no_parking", limit: 200 }),
   });
 
+  // Get real-time updates
+  const realTimeUpdates = getAllParkingUpdates();
+  
+  // Merge real-time data with static data
+  const enhancedParkings = data?.parkings?.map((parking: any) => {
+    const realTimeUpdate = realTimeUpdates.find(update => update.parkingId === parking.parkingId);
+    return {
+      ...parking,
+      ...(realTimeUpdate && {
+        currentCount: realTimeUpdate.currentCount,
+        availableSpaces: realTimeUpdate.availableSpaces,
+        isFull: realTimeUpdate.isFull,
+        lastUpdated: realTimeUpdate.lastUpdated,
+      })
+    };
+  }) || [];
+
   const handleParkingSelect = (parking: any) => {
     navigate(`/parkings/${parking._id}`);
   };
 
-  const filteredParkings = data?.parkings?.filter((parking: any) => {
+  const filteredParkings = enhancedParkings.filter((parking: any) => {
     if (filters.parkingType && parking.parkingType !== filters.parkingType) return false;
     if (filters.paymentType && parking.paymentType !== filters.paymentType) return false;
     if (filters.isFull === 'true' && !parking.isFull) return false;
@@ -44,7 +65,7 @@ export default function ParkingListPage() {
       );
     }
     return true;
-  }) || [];
+  });
 
   if (isLoading) {
     return (
@@ -185,7 +206,15 @@ export default function ParkingListPage() {
               {filteredParkings.map((parking: any) => (
                 <div key={parking._id} className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20 hover:bg-opacity-20 transition-all">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-black">{parking.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-black">{parking.name}</h3>
+                      {isConnected && realTimeUpdates.find(update => update.parkingId === parking.parkingId) && (
+                        <div className="flex items-center gap-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-xs text-green-600 font-medium">Live</span>
+                        </div>
+                      )}
+                    </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       parking.isFull ? 'bg-red-500 bg-opacity-20 text-white ' : 'bg-green-500 bg-opacity-20 text-white'
                     }`}>
@@ -212,15 +241,15 @@ export default function ParkingListPage() {
                       <>
                       <div className="flex  ">
                         <span className="text-black">Available Car Slots:</span>
-                        <span className="text-gray-800">- {parking.availableSpaces.car} cars</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.car} cars</span>
                       </div>
                       <div className="flex  ">
                         <span className="text-black">Available Bike Slots:</span>
-                        <span className="text-gray-800">- {parking.availableSpaces.bike} bikes</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.bike} bikes</span>
                       </div>
                       <div className="flex  ">
                         <span className="text-black">Available Bus/Truck Slots:</span>
-                        <span className="text-gray-800">- {parking.availableSpaces.bus_truck} bus/trucks</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.bus_truck} bus/trucks</span>
                       </div>
                       </>
                       

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Navigation from './Navigation';
+import RealTimeStatus from './RealTimeStatus';
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,9 +11,13 @@ export default function Layout({ children, showNavigation = true }: LayoutProps)
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700">
       {showNavigation && <Navigation />}
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {children}
       </main>
+      {/* Real-time status indicator */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <RealTimeStatus />
+      </div>
     </div>
   );
 }

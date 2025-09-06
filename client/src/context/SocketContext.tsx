@@ -3,6 +3,28 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
+interface ParkingCountUpdate {
+  parkingId: string;
+  currentCount: {
+    car: number;
+    bus_truck: number;
+    bike: number;
+  };
+  capacity: {
+    car: number;
+    bus_truck: number;
+    bike: number;
+  };
+  lastUpdated: string;
+  isFull: boolean;
+  availableSpaces: {
+    car: number;
+    bus_truck: number;
+    bike: number;
+  };
+  updatedBy?: 'cv_model' | 'staff';
+}
+
 interface SocketContextType {
   socket: Socket | null;
   isConnected: boolean;
@@ -10,6 +32,8 @@ interface SocketContextType {
   disconnect: () => void;
   joinParkingRoom: (parkingId: string) => void;
   leaveParkingRoom: (parkingId: string) => void;
+  onParkingCountUpdate: (callback: (data: ParkingCountUpdate) => void) => void;
+  offParkingCountUpdate: (callback: (data: ParkingCountUpdate) => void) => void;
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
@@ -18,15 +42,19 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
+  const [parkingCountCallbacks, setParkingCountCallbacks] = useState<Set<(data: ParkingCountUpdate) => void>>(new Set());
 
   const connect = () => {
-    if (!user) return;
+    if (!user || socket) return;
 
     const newSocket = io(import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000', {
       auth: {
         userId: user._id,
         role: user.role
-      }
+      },
+      transports: ['websocket', 'polling'],
+      timeout: 20000,
+      forceNew: true
     });
 
     newSocket.on('connect', () => {
@@ -47,9 +75,17 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       console.log('Joined parking room:', data);
     });
 
-    newSocket.on('parking_count_updated', (data) => {
+    newSocket.on('parking_count_updated', (data: ParkingCountUpdate) => {
       console.log('Parking count updated:', data);
-      // You can emit a custom event here to notify components
+      // Notify all registered callbacks
+      parkingCountCallbacks.forEach(callback => {
+        try {
+          callback(data);
+        } catch (error) {
+          console.error('Error in parking count callback:', error);
+        }
+      });
+      // Also emit a custom event for backward compatibility
       window.dispatchEvent(new CustomEvent('parkingCountUpdated', { detail: data }));
     });
 
@@ -58,6 +94,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
   const disconnect = () => {
     if (socket) {
+      socket.removeAllListeners();
       socket.disconnect();
       setSocket(null);
       setIsConnected(false);
@@ -76,6 +113,18 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const onParkingCountUpdate = (callback: (data: ParkingCountUpdate) => void) => {
+    setParkingCountCallbacks(prev => new Set([...prev, callback]));
+  };
+
+  const offParkingCountUpdate = (callback: (data: ParkingCountUpdate) => void) => {
+    setParkingCountCallbacks(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(callback);
+      return newSet;
+    });
+  };
+
   useEffect(() => {
     if (user) {
       connect();
@@ -88,6 +137,15 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     };
   }, [user]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
+
   const value: SocketContextType = {
     socket,
     isConnected,
@@ -95,6 +153,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     disconnect,
     joinParkingRoom,
     leaveParkingRoom,
+    onParkingCountUpdate,
+    offParkingCountUpdate,
   };
 
   return (

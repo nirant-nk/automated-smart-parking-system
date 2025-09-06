@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { useAuth } from "../hooks/useAuth";
 import { useGeolocation } from "../hooks/useGeolocation";
+import { useParkingUpdates } from "../hooks/useParkingUpdates";
 import { getParkingById } from "../services/parkingService";
 import { getUserVisits, recordVisit } from "../services/visitService";
 
@@ -20,6 +21,26 @@ export default function ParkingDetailPage() {
     queryFn: () => getParkingById(id!),
     enabled: !!id,
   });
+  
+  // Real-time parking updates
+  const { getParkingUpdate, hasRecentUpdate, isConnected } = useParkingUpdates({
+    parkingId: parking?.parkingId,
+    autoJoin: true
+  });
+
+  // Get real-time parking update
+  const realTimeUpdate = getParkingUpdate(parking?.parkingId || '');
+  
+  // Merge real-time data with static data
+  const currentParking = parking ? {
+    ...parking,
+    ...(realTimeUpdate && {
+      currentCount: realTimeUpdate.currentCount,
+      availableSpaces: realTimeUpdate.availableSpaces,
+      isFull: realTimeUpdate.isFull,
+      lastUpdated: realTimeUpdate.lastUpdated,
+    })
+  } : null;
 
   // Fetch user's visits for this parking to determine if already checked in
   const { data: userVisitsForParking } = useQuery({
@@ -33,7 +54,7 @@ export default function ParkingDetailPage() {
   );
 
   const handleCheckIn = async () => {
-    if (!user || !parking || !userLocation) {
+    if (!user || !currentParking || !userLocation) {
       toast.error("Unable to check in. Please ensure location access is enabled.");
       return;
     }
@@ -41,7 +62,7 @@ export default function ParkingDetailPage() {
     setIsCheckingIn(true);
     try {
       const visitData = {
-        parkingId: parking._id,
+        parkingId: currentParking._id,
         location: {
           type: "Point" as const,
           coordinates: [userLocation.longitude, userLocation.latitude] as [number, number],
@@ -89,7 +110,7 @@ export default function ParkingDetailPage() {
     );
   }
 
-  if (error || !parking) {
+  if (error || !currentParking) {
     return (
       <Layout>
         <div className="p-4">
@@ -111,9 +132,9 @@ export default function ParkingDetailPage() {
     );
   }
 
-  const distance = userLocation && parking.location.coordinates 
+  const distance = userLocation && currentParking?.location.coordinates 
     ? calculateDistance(
-        [parking.location.coordinates[1], parking.location.coordinates[0]], 
+        [currentParking.location.coordinates[1], currentParking.location.coordinates[0]], 
         [userLocation.latitude, userLocation.longitude]
       )
     : null;
@@ -126,8 +147,16 @@ export default function ParkingDetailPage() {
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white border-opacity-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-black mb-2">{parking.name}</h1>
-                <p className="text-gray-500">{parking.description}</p>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-black">{currentParking.name}</h1>
+                  {isConnected && realTimeUpdate && hasRecentUpdate(parking?.parkingId || '', 2) && (
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-green-600 font-medium">Live</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-gray-500">{currentParking.description}</p>
               </div>
               <button
                 onClick={() => navigate('/parkings')}
@@ -145,13 +174,20 @@ export default function ParkingDetailPage() {
               <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-black">Parking Status</h2>
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                    parking.isFull 
-                      ? 'bg-red-500 bg-opacity-20 text-white' 
-                      : 'bg-green-500 bg-opacity-20 text-white'
-                  }`}>
-                    {parking.isFull ? 'Full' : 'Available'}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                      currentParking.isFull 
+                        ? 'bg-red-500 bg-opacity-20 text-white' 
+                        : 'bg-green-500 bg-opacity-20 text-white'
+                    }`}>
+                      {currentParking.isFull ? 'Full' : 'Available'}
+                    </span>
+                    {realTimeUpdate && (
+                      <span className="text-xs text-gray-500">
+                        Updated {new Date(realTimeUpdate.lastUpdated).toLocaleTimeString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 {/*Total & Availability*/}
@@ -165,27 +201,24 @@ export default function ParkingDetailPage() {
                   </div>
                   <div className="text-2xl font-bold text-black">Car</div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.capacity?.car || 0}</div>
+                    <div className="text-center text-2xl">{currentParking.capacity?.car || 0}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.availableSpaces?.car || 0}</div>
+                    <div className="text-center text-2xl font-bold text-green-600">{currentParking.availableSpaces?.car || 0}</div>
                   </div>
                   <div className="text-2xl font-bold text-black">Bike</div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.capacity?.bike || 0}</div>
-
+                    <div className="text-center text-2xl">{currentParking.capacity?.bike || 0}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.availableSpaces?.bike || 0}</div>
-
+                    <div className="text-center text-2xl font-bold text-green-600">{currentParking.availableSpaces?.bike || 0}</div>
                   </div>
                   <div className="text-2xl font-bold text-black">Bus/Truck</div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.capacity?.bus_truck || 0}</div>
+                    <div className="text-center text-2xl">{currentParking.capacity?.bus_truck || 0}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-center text-2xl">{parking.availableSpaces?.bus_truck || 0}</div>
-                    
+                    <div className="text-center text-2xl font-bold text-green-600">{currentParking.availableSpaces?.bus_truck || 0}</div>
                   </div>
                 </div>
               </div>
@@ -196,29 +229,29 @@ export default function ParkingDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-black text-sm">Type</label>
-                    <p className="text-gray-500 font-medium capitalize">{parking.parkingType}</p>
+                    <p className="text-gray-500 font-medium capitalize">{currentParking.parkingType}</p>
                   </div>
                   <div>
                     <label className="text-black text-sm">Payment</label>
-                    <p className="text-gray-500 font-medium capitalize">{parking.paymentType}</p>
+                    <p className="text-gray-500 font-medium capitalize">{currentParking.paymentType}</p>
                   </div>
                   <div>
                     <label className="text-black text-sm">Ownership</label>
-                    <p className="text-gray-500 font-medium capitalize">{parking.ownershipType}</p>
+                    <p className="text-gray-500 font-medium capitalize">{currentParking.ownershipType}</p>
                   </div>
                   <div>
                     <label className="text-black text-sm">Last Updated</label>
                     <p className="text-gray-500 font-medium">
-                      {new Date(parking.lastUpdated).toLocaleDateString()}
+                      {new Date(currentParking.lastUpdated).toLocaleString()}
                     </p>
                   </div>
                 </div>
 
-                {parking.location.address && (
+                {currentParking.location.address && (
                   <div className="mt-4">
                     <label className="text-black text-sm">Address</label>
                     <p className="text-gray-500 font-medium">
-                      {parking.location.address.street}, {parking.location.address.city}, {parking.location.address.state}
+                      {currentParking.location.address.street}, {currentParking.location.address.city}, {currentParking.location.address.state}
                     </p>
                   </div>
                 )}
@@ -232,20 +265,20 @@ export default function ParkingDetailPage() {
               </div>
 
               {/* Rates Card */}
-              {parking.paymentType === 'paid' && (
+              {currentParking.paymentType === 'paid' && (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
                   <h2 className="text-xl font-semibold text-white mb-4">Hourly Rates</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${parking.hourlyRate?.car || 0}</div>
+                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.car || 0}</div>
                       <div className="text-gray-300 text-sm">Per Hour (Car)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${parking.hourlyRate?.bike || 0}</div>
+                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.bike || 0}</div>
                       <div className="text-gray-300 text-sm">Per Hour (Bike)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${parking.hourlyRate?.bus_truck || 0}</div>
+                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.bus_truck || 0}</div>
                       <div className="text-gray-300 text-sm">Per Hour (Bus/Truck)</div>
                     </div>
                   </div>
@@ -265,7 +298,7 @@ export default function ParkingDetailPage() {
                   onClick={handleCheckIn}
                   disabled={
                     isCheckingIn ||
-                    parking.isFull ||
+                    currentParking.isFull ||
                     !userLocation ||
                     isAlreadyCheckedIn
                   }
@@ -290,17 +323,17 @@ export default function ParkingDetailPage() {
               </div>
 
               {/* Owner Info */}
-              {parking.owner && (
+              {currentParking.owner && (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
                   <h2 className="text-xl font-semibold text-black mb-4">Parking Owner</h2>
                   <div className="space-y-2">
                     <div>
                       <label className="text-black text-sm">Name</label>
-                      <p className="text-gray-500 font-medium">{parking.owner.name}</p>
+                      <p className="text-gray-500 font-medium">{currentParking.owner.name}</p>
                     </div>
                     <div>
                       <label className="text-black text-sm">Email</label>
-                      <p className="text-gray-500 font-medium">{parking.owner.email}</p>
+                      <p className="text-gray-500 font-medium">{currentParking.owner.email}</p>
                     </div>
                   </div>
                 </div>
@@ -312,15 +345,15 @@ export default function ParkingDetailPage() {
                 <div className="space-y-3">
                   <div className="flex justify-items-end-safe">
                     <span className="text-gray-800">Total Visits :</span>
-                    <span className="text-gray-500 font-medium">- {parking.statistics?.totalVisits || 0}</span>
+                    <span className="text-gray-500 font-medium">- {currentParking.statistics?.totalVisits || 0}</span>
                   </div>
                   <div className="flex justify-items-end-safe">
                     <span className="text-gray-800">Average Occupancy :</span>
-                    <span className="text-gray-500 font-medium">- {parking.statistics?.averageOccupancy || 0}%</span>
+                    <span className="text-gray-500 font-medium">- {currentParking.statistics?.averageOccupancy || 0}%</span>
                   </div>
                   <div className="flex justify-items-end-safe">
                     <span className="text-gray-800">Current Occupancy :</span>
-                    <span className="text-gray-500 font-medium">- {parking.occupancyPercentage || 0}%</span>
+                    <span className="text-gray-500 font-medium">- {currentParking.occupancyPercentage || 0}%</span>
                   </div>
                 </div>
               </div>
