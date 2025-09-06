@@ -1,69 +1,47 @@
-# React + TypeScript + Vite
+# Advanced Smart Parking System - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive React frontend for the Advanced Smart Parking System featuring real-time parking management, interactive maps, GPS-verified check-ins, and a comprehensive reward system.
 
-Currently, two official plugins are available:
+## 🚀 Current Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🗺️ Interactive Map & Location Services
+- **Real-time Parking Visualization**: OpenStreetMap with Leaflet.js integration
+- **GPS Location Tracking**: Automatic user location detection and validation
+- **Smart Filtering**: Filter by parking type, payment method, availability, and distance
+- **Interactive Markers**: Color-coded markers with detailed parking information
+- **Distance Calculation**: Real-time distance from user to parking spots
+- **Navigation Integration**: Direct integration with mapping services
 
-## Expanding the ESLint configuration
+### 🎯 Core Functionality
+- **Real-time Updates**: Live parking availability updates via Socket.IO
+- **GPS-verified Check-ins**: Location-based verification for parking visits
+- **Reward System**: Earn coins for verified parking visits and approved requests
+- **Multi-role Support**: User, Owner, Staff, and Admin roles with appropriate permissions
+- **Request Management**: Submit and track parking location requests
+- **Admin Dashboard**: Comprehensive management interface for system oversight
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🎨 Modern UI/UX
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Real-time Updates**: Live parking availability updates via Socket.IO
+- **Intuitive Navigation**: Clean, user-friendly interface
+- **Toast Notifications**: Real-time feedback system
+- **Loading States**: Proper loading indicators and error handling
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Core Technologies
+- **React 19** with TypeScript for type safety
+- **Vite** for fast development and optimized builds
+- **Tailwind CSS** for responsive styling
+- **React Query (TanStack Query)** for efficient data fetching and caching
+- **React Router** for client-side navigation
+- **Leaflet.js** for interactive map functionality
+- **Socket.IO Client** for real-time updates
+- **React Hot Toast** for user notifications
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Development Tools
+- **TypeScript** for type safety and better development experience
+- **ESLint** for code quality and consistency
+- **Vite** for fast development server and optimized builds
+- **PostCSS** for CSS processing
+- **Autoprefixer** for CSS vendor prefixing

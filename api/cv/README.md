@@ -1,64 +1,77 @@
-# Advanced Smart Parking System - CV Model Backend
+# Advanced Smart Parking System - Computer Vision Backend
 
-A high-performance computer vision backend for real-time vehicle counting in parking lots using YOLOv8 and advanced tracking algorithms.
+A production-ready computer vision backend for real-time vehicle counting in parking lots using YOLOv8 and advanced tracking algorithms. This system provides accurate vehicle detection, counting, and real-time updates to the core parking management system.
 
-## Features
+## 🚀 Current Features
 
-- **Real-time Vehicle Detection**: Uses YOLOv8 for accurate vehicle detection (cars, buses/trucks, bikes)
-- **Advanced Tracking**: Improved centroid tracker with better object persistence
-- **Socket.IO Integration**: Real-time communication with the core Node.js backend
-- **Manual Adjustments**: Staff can manually correct counts when needed
-- **Multi-Parking Support**: Handle multiple parking lots simultaneously
-- **WebSocket API**: Real-time updates for frontend applications
-- **RESTful API**: Complete management interface
+### 🎯 Real-time Vehicle Detection
+- **YOLOv8 Integration**: State-of-the-art object detection for accurate vehicle identification
+- **Multi-vehicle Support**: Detection of cars, buses/trucks, and bikes with high precision
+- **Real-time Processing**: Live video stream processing with configurable update intervals
+- **Confidence Thresholding**: Adjustable detection confidence for optimal accuracy
+
+### 🔄 Advanced Tracking System
+- **Centroid Tracking**: Improved object tracking with better persistence
+- **Multi-object Tracking**: Simultaneous tracking of multiple vehicles
+- **Disappearance Handling**: Smart handling of temporarily occluded vehicles
+- **Distance-based Association**: Accurate vehicle counting with distance validation
+
+### 🔌 Real-time Integration
+- **Socket.IO Communication**: Seamless real-time communication with core backend
 - **Automatic Reconnection**: Robust connection handling with retry logic
+- **Event-driven Updates**: Real-time parking count updates to all connected clients
+- **Multi-parking Support**: Handle multiple parking lots simultaneously
 
-## Tech Stack
+### 🛠️ Management & Control
+- **RESTful API**: Complete management interface for system control
+- **Manual Adjustments**: Staff can manually correct counts when needed
+- **WebSocket API**: Real-time updates for frontend applications
+- **Health Monitoring**: System health checks and status monitoring
 
-- **Framework**: FastAPI (Python)
-- **Computer Vision**: YOLOv8 (Ultralytics)
-- **Real-time Communication**: Socket.IO
-- **Video Processing**: OpenCV
-- **Data Validation**: Pydantic
-- **Logging**: Python logging
+## 🛠️ Tech Stack
 
-## Prerequisites
+### Core Technologies
+- **Framework**: FastAPI (Python) - High-performance async web framework
+- **Computer Vision**: YOLOv8 (Ultralytics) - State-of-the-art object detection
+- **Real-time Communication**: Socket.IO - Bidirectional real-time communication
+- **Video Processing**: OpenCV - Computer vision and image processing
+- **Data Validation**: Pydantic - Data validation and serialization
 
-- Python 3.8+
-- CUDA-compatible GPU (optional, for faster inference)
-- Camera or video stream access
+### Development & Monitoring
+- **Logging**: Python logging - Comprehensive logging system
+- **Environment Management**: python-dotenv - Configuration management
+- **Async Support**: uvicorn - ASGI server for FastAPI
+- **File Handling**: aiofiles - Async file operations
 
-## Installation
+## 📋 Prerequisites
 
-### Prerequisites
-- Python 3.8+ (Python 3.13+ may have compatibility issues)
-- pip (latest version)
-- Virtual environment (recommended)
+- **Python 3.8+** (Python 3.13+ may have compatibility issues)
+- **CUDA-compatible GPU** (optional, for faster inference)
+- **Camera or video stream access** (RTSP, webcam, or video file)
+- **Virtual environment** (recommended for isolation)
 
-### Method 1: Standard Installation (Recommended)
+## 🚀 Installation & Setup
 
-1. **Clone the repository** (if not already done):
-   ```bash
-   cd api/cv
-   ```
+### 1. Navigate to CV Directory
+```bash
+cd api/cv
+```
 
-2. **Create virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  
-   # On Windows: 
-   venv/Scripts/activate
-   ```
+### 2. Create Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 3. Install Dependencies
 
-### Method 2: Automated Installation (For Python 3.13+)
+#### Method 1: Standard Installation (Recommended)
+```bash
+pip install -r requirements.txt
+```
 
-If you encounter installation issues (especially with Python 3.13+), use the automated installer:
-
+#### Method 2: Automated Installation (For Python 3.13+)
+If you encounter installation issues, use the automated installer:
 ```bash
 python install_dependencies.py
 ```
@@ -70,10 +83,7 @@ This script will:
 - Provide alternative installation methods
 - Verify the installation
 
-### Method 3: Manual Installation (Fallback)
-
-If both methods fail, try installing packages individually:
-
+#### Method 3: Manual Installation (Fallback)
 ```bash
 # Install build tools first
 pip install --upgrade pip setuptools wheel
@@ -91,66 +101,20 @@ pip install python-dotenv requests aiofiles
 pip install pytest pytest-asyncio
 ```
 
-### Post-Installation
+### 4. Download YOLO Model
+```bash
+# The model will be downloaded automatically when the service starts
+# Or manually download it:
+python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+```
 
-4. **Download YOLO model** (automatically done on first run):
-   ```bash
-   # The model will be downloaded automatically when the service starts
-   # or you can manually download it:
-   python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
-   ```
+### 5. Environment Configuration
+```bash
+cp .sample.env .env
+# Edit .env with your configuration
+```
 
-5. **Setup environment**:
-   ```bash
-   cp .sample.env .env
-   # Edit .env with your configuration
-   ```
-
-### Troubleshooting Installation Issues
-
-#### Python 3.13+ Issues
-If you're using Python 3.13+ and encounter build errors:
-
-1. **Use the automated installer**:
-   ```bash
-   python install_dependencies.py
-   ```
-
-2. **Try alternative requirements**:
-   ```bash
-   pip install -r requirements_alt.txt
-   ```
-
-3. **Use conda instead of pip**:
-   ```bash
-   conda install -c conda-forge opencv numpy
-   pip install fastapi uvicorn ultralytics
-   ```
-
-#### Common Issues
-
-1. **setuptools.build_meta error**:
-   ```bash
-   pip install --upgrade setuptools wheel
-   pip install -r requirements.txt
-   ```
-
-2. **OpenCV installation fails**:
-   ```bash
-   pip install opencv-python-headless
-   ```
-
-3. **NumPy compilation issues**:
-   ```bash
-   pip install numpy --only-binary=all
-   ```
-
-4. **Permission errors**:
-   ```bash
-   pip install --user -r requirements.txt
-   ```
-
-## Configuration
+## ⚙️ Environment Configuration
 
 Create a `.env` file based on `.sample.env`:
 
@@ -181,7 +145,51 @@ PORT=5001
 LOG_LEVEL=INFO
 ```
 
-## Usage
+## 🔧 Troubleshooting Installation Issues
+
+### Python 3.13+ Compatibility Issues
+If you're using Python 3.13+ and encounter build errors:
+
+1. **Use the automated installer**:
+   ```bash
+   python install_dependencies.py
+   ```
+
+2. **Try alternative requirements**:
+   ```bash
+   pip install -r requirements_alt.txt
+   ```
+
+3. **Use conda instead of pip**:
+   ```bash
+   conda install -c conda-forge opencv numpy
+   pip install fastapi uvicorn ultralytics
+   ```
+
+### Common Installation Issues
+
+1. **setuptools.build_meta error**:
+   ```bash
+   pip install --upgrade setuptools wheel
+   pip install -r requirements.txt
+   ```
+
+2. **OpenCV installation fails**:
+   ```bash
+   pip install opencv-python-headless
+   ```
+
+3. **NumPy compilation issues**:
+   ```bash
+   pip install numpy --only-binary=all
+   ```
+
+4. **Permission errors**:
+   ```bash
+   pip install --user -r requirements.txt
+   ```
+
+## 🚀 Usage
 
 ### Starting the Service
 
@@ -193,12 +201,25 @@ python cv-model.py
 uvicorn cv-model:app --host 0.0.0.0 --port 5001 --reload
 ```
 
-### API Endpoints
+### Service Verification
+- CV backend should be running on `http://localhost:5001`
+- Health check available at `http://localhost:5001/health`
+- Socket.IO connection established with core backend
 
-#### Health Check
-```bash
-GET /health
-```
+## 🔧 API Endpoints
+
+### Health & Status
+- `GET /health` - Service health check
+- `GET /config` - Get current configuration
+- `GET /list` - List active parking processors
+
+### Parking Management
+- `POST /init` - Initialize parking processor
+- `GET /status/{parking_id}` - Get parking status
+- `PATCH /adjust/{parking_id}` - Manual count adjustment
+- `POST /stop/{parking_id}` - Stop parking processor
+
+### Example API Usage
 
 #### Initialize Parking Processor
 ```bash
@@ -217,11 +238,6 @@ Content-Type: application/json
 }
 ```
 
-#### Get Parking Status
-```bash
-GET /status/{parking_id}
-```
-
 #### Manual Count Adjustment
 ```bash
 PATCH /adjust/{parking_id}
@@ -236,23 +252,9 @@ Content-Type: application/json
 }
 ```
 
-#### Stop Parking Processor
-```bash
-POST /stop/{parking_id}
-```
-
-#### List Active Processors
-```bash
-GET /list
-```
-
-#### Get Configuration
-```bash
-GET /config
-```
+## 🔌 Real-time Integration
 
 ### WebSocket Connection
-
 Connect to real-time updates:
 ```javascript
 const ws = new WebSocket('ws://localhost:5001/ws/parking_001');
@@ -263,11 +265,9 @@ ws.onmessage = function(event) {
 };
 ```
 
-## Integration with Core Backend
+### Socket.IO Integration with Core Backend
 
-The CV model automatically connects to the core Node.js backend and sends real-time updates via Socket.IO:
-
-### Socket.IO Events
+The CV model automatically connects to the core Node.js backend and sends real-time updates:
 
 #### Outgoing Events (CV → Core Backend)
 - `cv_model_connect`: Register CV model with core backend
@@ -276,8 +276,7 @@ The CV model automatically connects to the core Node.js backend and sends real-t
 #### Incoming Events (Core Backend → CV)
 - `manual_count_update`: Receive manual count adjustments from staff
 
-### Data Format
-
+#### Data Format
 ```json
 {
   "parking_id": "parking_001",
@@ -302,19 +301,20 @@ The CV model automatically connects to the core Node.js backend and sends real-t
 }
 ```
 
-## Vehicle Detection
+## 🎯 Vehicle Detection
 
 ### Supported Vehicle Types
-- **Car**: Sedans, SUVs, hatchbacks
-- **Bus/Truck**: Buses, trucks, large commercial vehicles
-- **Bike**: Motorcycles, bicycles
+- **Car**: Sedans, SUVs, hatchbacks, and similar passenger vehicles
+- **Bus/Truck**: Buses, trucks, and large commercial vehicles
+- **Bike**: Motorcycles, bicycles, and two-wheeled vehicles
 
 ### Detection Accuracy
-- **Confidence Threshold**: 0.4 (configurable)
-- **Model**: YOLOv8n (nano) - fast and efficient
-- **Processing**: Real-time with 1-second intervals
+- **Confidence Threshold**: 0.4 (configurable via environment variables)
+- **Model**: YOLOv8n (nano) - optimized for speed and efficiency
+- **Processing**: Real-time with configurable update intervals (default: 1 second)
+- **Image Size**: 640x640 pixels (configurable)
 
-## Performance Optimization
+## ⚡ Performance Optimization
 
 ### GPU Acceleration
 For better performance, ensure CUDA is available:
@@ -328,31 +328,27 @@ python -c "import torch; print(torch.cuda.is_available())"
 - **MAX_DISAPPEARED**: How long to track objects after they disappear
 - **MAX_DISTANCE**: Maximum distance for object tracking
 - **PROCESS_INTERVAL**: Update frequency (seconds)
+- **YOLO_IMAGE_SIZE**: Input image size for detection (affects speed vs accuracy)
 
-## Error Handling
+## 🛠️ Error Handling & Monitoring
 
+### Error Handling
 The service includes comprehensive error handling:
 - **Connection Retries**: Automatic reconnection to core backend
 - **Video Source Failures**: Graceful handling of camera disconnections
 - **Model Loading**: Fallback handling for YOLO model issues
 - **Memory Management**: Proper cleanup of resources
 
-## Monitoring
-
-### Logs
-The service provides detailed logging:
+### Monitoring & Logging
 ```bash
 # View logs
 tail -f logs/cv-model.log
-```
 
-### Health Monitoring
-```bash
 # Check service health
 curl http://localhost:5001/health
 ```
 
-## Development
+## 🧪 Development
 
 ### Running Tests
 ```bash
@@ -365,7 +361,7 @@ pytest tests/
 pre-commit install
 ```
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
@@ -393,7 +389,7 @@ pre-commit install
    - Increase PROCESS_INTERVAL
    - Use GPU acceleration if available
 
-## Deployment
+## 🚀 Deployment
 
 ### Docker Deployment
 ```dockerfile
@@ -416,14 +412,24 @@ CMD ["python", "cv-model.py"]
 - Configure reverse proxy (nginx)
 - Use process manager (systemd, supervisor)
 
-## License
+## 📄 License
 
-This project is part of the Advanced Smart Parking System.
+This project is part of the Advanced Smart Parking System and is licensed under the MIT License.
 
-## Support
+## 🆘 Support
 
 For issues and questions:
-1. Check the troubleshooting section
-2. Review logs for error details
-3. Verify configuration settings
-4. Test with sample video files first
+1. **Check the troubleshooting section** above
+2. **Review logs** for error details
+3. **Verify configuration settings** in `.env` file
+4. **Test with sample video files** first before using live streams
+
+### Additional Resources
+- **Main Documentation**: Check the main README.md
+- **Backend Documentation**: `api/backend/README.md`
+- **API Documentation**: `api/backend/API_DOCUMENTATION.md`
+
+---
+
+**Advanced Smart Parking System - Computer Vision Backend**  
+*Real-time vehicle detection and counting for smart parking management.*
