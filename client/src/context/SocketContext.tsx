@@ -54,7 +54,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       },
       transports: ['websocket', 'polling'],
       timeout: 20000,
-      forceNew: true
+      forceNew: true,
+      autoConnect: true
     });
 
     newSocket.on('connect', () => {
@@ -135,14 +136,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     return () => {
       disconnect();
     };
-  }, [user]);
+  }, [user?._id]); // Only depend on user ID to prevent unnecessary reconnections
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (socket) {
-        socket.disconnect();
-      }
+      disconnect();
     };
   }, []);
 

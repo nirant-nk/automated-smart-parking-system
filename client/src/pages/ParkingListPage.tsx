@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import ParkingMap from "../components/map/ParkingMap";
+import { useDebounce } from "../hooks/useDebounce";
 import { useParkingUpdates } from "../hooks/useParkingUpdates";
 import { getAllParkings } from "../services/parkingService";
 import { getApprovedRequests } from "../services/requestService";
@@ -16,6 +17,9 @@ export default function ParkingListPage() {
     search: ''
   });
   const navigate = useNavigate();
+  
+  // Debounce search to prevent excessive API calls
+  const debouncedSearch = useDebounce(filters.search, 300);
   
   // Real-time parking updates for all parkings
   const { getAllParkingUpdates, isConnected } = useParkingUpdates();
@@ -56,8 +60,8 @@ export default function ParkingListPage() {
     if (filters.paymentType && parking.paymentType !== filters.paymentType) return false;
     if (filters.isFull === 'true' && !parking.isFull) return false;
     if (filters.isFull === 'false' && parking.isFull) return false;
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
+    if (debouncedSearch) {
+      const searchLower = debouncedSearch.toLowerCase();
       return (
         parking.name.toLowerCase().includes(searchLower) ||
         parking.description?.toLowerCase().includes(searchLower) ||
@@ -199,7 +203,7 @@ export default function ParkingListPage() {
           {/* Content */}
           {viewMode === 'map' ? (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
-              <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={filters.search} />
+              <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={debouncedSearch} />
             </div>
           ) : (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">

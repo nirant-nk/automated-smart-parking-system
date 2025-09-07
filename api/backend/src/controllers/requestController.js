@@ -1,4 +1,5 @@
 import { COIN_REWARDS, SUCCESS_MESSAGES } from '../constants.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
 import Parking from '../models/Parking.js';
 import Request from '../models/Request.js';
@@ -8,15 +9,50 @@ import User from '../models/User.js';
 // @route   POST /api/requests
 // @access  Private
 export const createRequest = asyncHandler(async (req, res) => {
+  let requestData;
+  
+  // Handle both JSON and FormData requests
+  if (req.body.requestData) {
+    // FormData request with images
+    requestData = JSON.parse(req.body.requestData);
+  } else {
+    // Regular JSON request
+    requestData = req.body;
+  }
+  
   const {
     requestType,
     title,
     description,
     location,
-    images,
     parkingDetails,
     noParkingDetails
-  } = req.body;
+  } = requestData;
+
+  let uploadedImages = [];
+
+  // Handle image uploads if files are present
+  if (req.files && req.files.length > 0) {
+    try {
+      // Upload each image to Cloudinary
+      for (const file of req.files) {
+        const uploadResult = await uploadToCloudinary(file, 'parking-requests');
+        
+        if (uploadResult.success) {
+          uploadedImages.push({
+            url: uploadResult.data.url,
+            publicId: uploadResult.data.publicId,
+            caption: file.originalname
+          });
+        } else {
+          console.error('Failed to upload image:', uploadResult.error);
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      throw new AppError('Failed to upload images', 500);
+    }
+  }
 
   // Create request
   const request = await Request.create({
@@ -25,11 +61,10 @@ export const createRequest = asyncHandler(async (req, res) => {
     title,
     description,
     location,
-    images,
+    images: uploadedImages,
     parkingDetails,
     noParkingDetails
   });
-
 
   res.status(201).json({
     success: true,

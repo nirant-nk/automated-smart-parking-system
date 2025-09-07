@@ -69,6 +69,8 @@ export function useParkingUpdates(options: UseParkingUpdatesOptions = {}) {
       if (parkingId && isConnected) {
         leaveParkingRoom(parkingId);
       }
+      // Clear all parking updates on unmount
+      setParkingUpdates(new Map());
     };
   }, []);
 

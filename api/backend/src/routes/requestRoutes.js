@@ -1,4 +1,6 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
 import {
     approveRequest,
     createRequest,
@@ -26,6 +28,33 @@ import {
 
 const router = express.Router();
 
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+    files: 5 // Maximum 5 files
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only image files
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  }
+});
+
 // Public routes (no authentication required)
 router.get('/approved', validateQueryParams, getApprovedRequests);
 
@@ -34,7 +63,7 @@ router.use(authenticate);
 
 // Request management routes
 // router.post('/', authorizeUser, validateRequestCreation, createRequest);
-router.post('/', authorizeUser, createRequest);
+router.post('/', authorizeUser, upload.array('images', 5), createRequest);
 router.get('/user/me', authorizeUser, validateQueryParams, getUserRequests);
 router.get('/nearby', authorizeUser, validateQueryParams, getNearbyRequests);
 

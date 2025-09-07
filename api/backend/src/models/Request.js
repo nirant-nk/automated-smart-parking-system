@@ -60,6 +60,10 @@ const requestSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    publicId: {
+      type: String,
+      required: true
+    },
     caption: String,
     uploadedAt: {
       type: Date,

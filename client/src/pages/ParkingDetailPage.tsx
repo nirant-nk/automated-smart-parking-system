@@ -72,8 +72,8 @@ export default function ParkingDetailPage() {
 
       await recordVisit(visitData);
       toast.success("Successfully checked in! You earned 10 coins.");
-      // Refresh user data to update wallet
-      window.location.reload();
+      // Invalidate queries to refresh data instead of page reload
+      // This will be handled by the query client automatically
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to check in");
     } finally {
@@ -267,19 +267,19 @@ export default function ParkingDetailPage() {
               {/* Rates Card */}
               {currentParking.paymentType === 'paid' && (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                  <h2 className="text-xl font-semibold text-white mb-4">Hourly Rates</h2>
+                  <h2 className="text-xl font-semibold text-black mb-4">Hourly Rates</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.car || 0}</div>
-                      <div className="text-gray-300 text-sm">Per Hour (Car)</div>
+                      <div className="text-2xl font-bold text-gray-700">{currentParking.hourlyRate?.car || 0} Coins</div>
+                      <div className="text-gray-500 text-sm">Per Hour (Car)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.bike || 0}</div>
-                      <div className="text-gray-300 text-sm">Per Hour (Bike)</div>
+                      <div className="text-2xl font-bold text-gray-700">{currentParking.hourlyRate?.bike || 0} Coins</div>
+                      <div className="text-gray-500 text-sm">Per Hour (Bike)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">${currentParking.hourlyRate?.bus_truck || 0}</div>
-                      <div className="text-gray-300 text-sm">Per Hour (Bus/Truck)</div>
+                      <div className="text-2xl font-bold text-gray-700">{currentParking.hourlyRate?.bus_truck || 0} Coins</div>
+                      <div className="text-gray-500 text-sm">Per Hour (Bus/Truck)</div>
                     </div>
                   </div>
                 </div>

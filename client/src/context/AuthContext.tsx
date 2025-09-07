@@ -57,11 +57,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const userData = await getProfile();
           if (userData?.user) {
             setUser(userData.user);
+          } else {
+            // Token is invalid, remove it
+            localStorage.removeItem('token');
           }
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
         localStorage.removeItem('token');
+        setUser(null);
       } finally {
         setLoading(false);
       }

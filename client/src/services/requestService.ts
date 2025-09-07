@@ -107,8 +107,24 @@ export async function createRequest(requestData: {
     };
     affectedArea: "full" | "partial";
   };
-}) {
-  const res = await api.post("/requests", requestData);
+}, images?: File[]) {
+  const formData = new FormData();
+  
+  // Add request data as JSON
+  formData.append('requestData', JSON.stringify(requestData));
+  
+  // Add images if provided
+  if (images && images.length > 0) {
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+  }
+  
+  const res = await api.post("/requests", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return res.data.data;
 }
 

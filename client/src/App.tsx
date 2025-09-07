@@ -1,4 +1,6 @@
 import { Toaster } from 'react-hot-toast';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import LoadingSpinner from './components/common/LoadingSpinner';
 import { useAuth } from './hooks/useAuth';
 import './index.css';
 import Router from './router';
@@ -9,16 +11,13 @@ function App() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto"></div>
-          <p className="mt-4 text-white text-lg">Loading ParkSmart...</p>
-        </div>
+        <LoadingSpinner size="lg" text="Loading ParkSmart..." />
       </div>
     );
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <Router />
       <Toaster
         position="top-right"
@@ -44,7 +43,7 @@ function App() {
           },
         }}
       />
-    </>
+    </ErrorBoundary>
   );
 }
 

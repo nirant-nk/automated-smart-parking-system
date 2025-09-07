@@ -1,23 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import ImageUpload from "../components/common/ImageUpload";
 import Layout from "../components/common/Layout";
+import LocationPicker from "../components/map/LocationPicker";
 import { useAuth } from "../hooks/useAuth";
-import { useGeolocation } from "../hooks/useGeolocation";
 import { createRequest, getUserRequests } from "../services/requestService";
 
 export default function RequestPage() {
   const { user } = useAuth();
-  const { location: userLocation } = useGeolocation();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     requestType: 'parking',
     title: '',
     description: '',
     location: {
       type: 'Point',
-      coordinates: [0, 0],
+      coordinates: [0, 0] as [number, number],
       address: {
         street: '',
         city: '',
@@ -58,11 +59,12 @@ export default function RequestPage() {
   const filteredRequests = (requests || []).filter((r: any) => statusFilter === 'all' ? true : r.status === statusFilter);
 
   const createRequestMutation = useMutation({
-    mutationFn: createRequest,
+    mutationFn: (data: { requestData: any, images: File[] }) => createRequest(data.requestData, data.images),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-requests'] });
       toast.success('Request submitted successfully!');
       setShowForm(false);
+      setSelectedImages([]);
       setFormData({
         requestType: 'parking',
         title: '',
@@ -107,11 +109,21 @@ export default function RequestPage() {
     }
   });
 
+  const handleLocationSelect = (coordinates: [number, number]) => {
+    setFormData(prev => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        coordinates
+      }
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!userLocation) {
-      toast.error('Please enable location access to submit a request');
+    if (formData.location.coordinates[0] === 0 && formData.location.coordinates[1] === 0) {
+      toast.error('Please select a location on the map');
       return;
     }
 
@@ -133,7 +145,7 @@ export default function RequestPage() {
       description: formData.description,
       location: {
         type: "Point" as const,
-        coordinates: [userLocation.longitude, userLocation.latitude] as [number, number]
+        coordinates: formData.location.coordinates
       },
       images: [],
       parkingDetails: formData.requestType === 'parking' ? {
@@ -148,7 +160,7 @@ export default function RequestPage() {
       } : undefined
     };
 
-    createRequestMutation.mutate(requestData);
+    createRequestMutation.mutate({ requestData, images: selectedImages });
   };
 
   function setNestedValue<T extends Record<string, any>>(obj: T, path: string[], newValue: any): T {
@@ -264,9 +276,23 @@ export default function RequestPage() {
                   />
                 </div>
 
-                {/* Location Information */}
+                {/* Image Upload */}
+                <ImageUpload
+                  onImagesChange={setSelectedImages}
+                  maxImages={5}
+                  maxSizeInMB={5}
+                />
+
+                {/* Location Selection */}
+                <LocationPicker
+                  onLocationSelect={handleLocationSelect}
+                  initialLocation={formData.location.coordinates}
+                  className="h-64 w-full rounded-lg"
+                />
+
+                {/* Address Information */}
                 <div>
-                  <label className="block text-gray-500 text-sm mb-2">Location Details</label>
+                  <label className="block text-gray-500 text-sm mb-2">Address Details (Optional)</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                       type="text"

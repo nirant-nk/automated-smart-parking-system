@@ -16,6 +16,9 @@ import { fileURLToPath } from 'url';
 // Import database connection
 import database from './database/connection.js';
 
+// Import Cloudinary configuration
+import './config/cloudinary.js';
+
 // Import middleware
 import { errorHandler, notFound, rateLimitErrorHandler } from './middlewares/errorHandler.js';
 

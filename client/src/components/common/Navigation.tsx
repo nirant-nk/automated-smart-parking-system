@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useClickOutside } from '../../hooks/useClickOutside';
 
 export default function Navigation() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  // Close menus when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsUserMenuOpen(false);
+  }, [location.pathname]);
+
+  // Click outside handlers
+  const userMenuRef = useClickOutside<HTMLDivElement>(() => setIsUserMenuOpen(false));
+  const mobileMenuRef = useClickOutside<HTMLDivElement>(() => setIsMenuOpen(false));
 
   const isAdmin = user?.role === 'admin' ;
 
@@ -73,9 +85,9 @@ export default function Navigation() {
             </div>
 
             {/* User Avatar */}
-            <div className="relative">
+            <div className="relative" ref={userMenuRef}>
               <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className="flex items-center space-x-2 text-white hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-lg transition-colors"
               >
                 <div className="flex justify-around items-center ring-1 ring-gray-300 p-2 rounded-lg">
@@ -90,7 +102,7 @@ export default function Navigation() {
               </button>
 
               {/* Dropdown Menu */}
-              {isMenuOpen && (
+              {isUserMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-lg border border-white border-opacity-20 py-2">
                   <div className="px-4 py-2 border-b border-gray-200">
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
@@ -129,7 +141,7 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white border-opacity-20">
+          <div className="md:hidden py-4 border-t border-white border-opacity-20" ref={mobileMenuRef}>
             <div className="space-y-2">
               {navigationItems.map((item) => (
                 <Link
@@ -171,6 +183,7 @@ export default function Navigation() {
                   onClick={() => {
                     handleLogout();
                     setIsMenuOpen(false);
+                    setIsUserMenuOpen(false);
                   }}
                   className="w-full text-left flex items-center space-x-3 px-3 py-2 text-red-400 hover:bg-red-500 hover:bg-opacity-10 rounded-lg transition-colors"
                 >
