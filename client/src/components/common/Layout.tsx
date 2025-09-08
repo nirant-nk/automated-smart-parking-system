@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import Navigation from './Navigation';
-import RealTimeStatus from './RealTimeStatus';
 import RouteTransition from './RouteTransition';
 
 interface LayoutProps {
@@ -17,10 +16,6 @@ export default function Layout({ children, showNavigation = true }: LayoutProps)
           {children}
         </RouteTransition>
       </main>
-      {/* Real-time status indicator */}
-      <div className="fixed bottom-4 right-4 z-40">
-        <RealTimeStatus />
-      </div>
     </div>
   );
 }
