@@ -69,6 +69,12 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
     queryFn: () => getApprovedRequests({ requestType: 'no_parking', limit: 200 }),
   });
   
+
+  const handleGoToMap = (lat: number, lng: number) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, "_blank");
+  };
+
   const { location: userLocation, loading: locationLoading } = useGeolocation();
   const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]); // San Francisco default
   
@@ -147,7 +153,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
             position={[parking.location.coordinates[1], parking.location.coordinates[0]]}
             icon={createParkingIcon(!parking.isFull)}
             eventHandlers={{
-              click: () => onParkingSelect?.(parking),
+                click: () => {},
             }}
           >
             <Popup>
@@ -170,19 +176,38 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
                     </span>
                   </div>
                   {parking.availableSpaces && (
-                    <div className="flex justify-between">
-                      <span>Available:</span>
-                      <span>{parking.availableSpaces.car} cars</span>
-                    </div>
+                    <>
+                    <div className="flex  ">
+                        <span className="text-black">Available Car Slots:</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.car} cars</span>
+                      </div>
+                      <div className="flex  ">
+                        <span className="text-black">Available Bike Slots:</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.bike} bikes</span>
+                      </div>
+                      <div className="flex  ">
+                        <span className="text-black">Available Bus/Truck Slots:</span>
+                        <span className="text-green-600 font-bold">- {parking.availableSpaces.bus_truck} bus/trucks</span>
+                      </div>
+                    </>
                   )}
                 </div>
                 {onParkingSelect && (
+                  <>
                   <button
                     onClick={() => onParkingSelect(parking)}
                     className="mt-3 w-full bg-blue-600 text-white py-1 px-3 rounded text-sm hover:bg-blue-700 transition-colors"
                   >
                     View Details
                   </button>
+                  <div className="my-2"></div>
+                  <button
+                    onClick={() => handleGoToMap(parking.location.coordinates[1], parking.location.coordinates[0])}
+                    className="w-full bg-green-600 font-bold hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Go To
+                  </button>
+                </>
                 )}
               </div>
             </Popup>

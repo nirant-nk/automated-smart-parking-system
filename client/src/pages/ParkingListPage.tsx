@@ -55,6 +55,11 @@ export default function ParkingListPage() {
     navigate(`/parkings/${parking._id}`);
   };
 
+  const handleGoToMap = (lat: number, lng: number) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, "_blank");
+  };
+
   const filteredParkings = enhancedParkings.filter((parking: any) => {
     if (filters.parkingType && parking.parkingType !== filters.parkingType) return false;
     if (filters.paymentType && parking.paymentType !== filters.paymentType) return false;
@@ -200,7 +205,7 @@ export default function ParkingListPage() {
             </p>
           </div>
 
-          {/* Content */}
+          {/* Content MAP or LIST*/}
           {viewMode === 'map' ? (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
               <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={debouncedSearch} />
@@ -265,6 +270,13 @@ export default function ParkingListPage() {
                     className="w-full bg-blue-600 font-bold hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
                   >
                     View Details
+                  </button>
+                  <div className="my-2"></div>
+                   <button
+                    onClick={() => handleGoToMap(parking.location.coordinates[1], parking.location.coordinates[0])}
+                    className="w-full bg-green-600 font-bold hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Go To
                   </button>
                 </div>
               ))}
