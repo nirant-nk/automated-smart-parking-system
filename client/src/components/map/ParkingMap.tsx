@@ -76,7 +76,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
   };
 
   const { location: userLocation, loading: locationLoading } = useGeolocation();
-  const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]); // San Francisco default
+  const [mapCenter, setMapCenter] = useState<[number, number]>([18.4636, 73.8682]); // San Francisco default
   
   useEffect(() => {
     if (userLocation && !locationLoading) {
