@@ -57,17 +57,25 @@ interface ParkingMapProps {
   onParkingSelect?: (parking: any) => void;
   showUserLocation?: boolean;
   searchTerm?: string;
+  parkings?: any[];
+  noParkingData?: any[];
 }
 
-export default function ParkingMap({ onParkingSelect, showUserLocation = true, searchTerm = '' }: ParkingMapProps) {
-  const { data: parkings, isLoading, error } = useQuery({
+export default function ParkingMap({ onParkingSelect, showUserLocation = true, searchTerm = '', parkings: propParkings, noParkingData: propNoParkingData }: ParkingMapProps) {
+  // Use props if provided, otherwise fall back to API calls
+  const { data: apiParkings, isLoading, error } = useQuery({
     queryKey: ['parkings'],
     queryFn: () => getAllParkings(),
+    enabled: !propParkings, // Only fetch if not provided as props
   });
-  const { data: noParkingData } = useQuery({
+  const { data: apiNoParkingData } = useQuery({
     queryKey: ['no-parking-requests', 'approved'],
     queryFn: () => getApprovedRequests({ requestType: 'no_parking', limit: 200 }),
+    enabled: !propNoParkingData, // Only fetch if not provided as props
   });
+
+  const parkings = propParkings || apiParkings;
+  const noParkingData = propNoParkingData || apiNoParkingData;
   
 
   const handleGoToMap = (lat: number, lng: number) => {
@@ -84,7 +92,8 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
     }
   }, [userLocation, locationLoading]);
 
-  if (isLoading) {
+  // Only show loading/error states if we're fetching data (not using props)
+  if (!propParkings && isLoading) {
     return (
       <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
         <div className="text-center">
@@ -95,7 +104,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
     );
   }
 
-  if (error) {
+  if (!propParkings && error) {
     return (
       <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
         <div className="text-center">
@@ -106,7 +115,8 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
     );
   }
 
-  const parkingListRaw = parkings?.parkings || [];
+  // Handle both prop data and API data formats
+  const parkingListRaw = propParkings ? propParkings : (parkings?.parkings || []);
   const parkingList = searchTerm
     ? parkingListRaw.filter((p: any) =>
         (p.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
@@ -114,7 +124,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
         (p.location?.address?.street?.toLowerCase() || '').includes(searchTerm.toLowerCase())
       )
     : parkingListRaw;
-  const noParkingList = (noParkingData?.requests ?? noParkingData ?? []).filter((r: any) => r.location?.coordinates?.length === 2);
+  const noParkingList = (propNoParkingData || noParkingData?.requests || noParkingData || []).filter((r: any) => r.location?.coordinates?.length === 2);
 
   return (
     <div className="relative">
@@ -152,9 +162,6 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
             key={parking._id}
             position={[parking.location.coordinates[1], parking.location.coordinates[0]]}
             icon={createParkingIcon(!parking.isFull)}
-            eventHandlers={{
-                click: () => {},
-            }}
           >
             <Popup>
               <div className="p-2">

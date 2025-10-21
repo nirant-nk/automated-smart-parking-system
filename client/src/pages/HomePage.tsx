@@ -23,7 +23,7 @@ export default function HomePage() {
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-40" style={backgroundPatternStyle}></div>
           
-          <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
+          <div className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center">
             {/* Main Hero Content */}
             <div className="max-w-4xl mx-auto">
               <div className="mb-8">
@@ -177,17 +177,19 @@ export default function HomePage() {
 
   return (
     <Layout>
-      <div className="container mx-auto p-4 md:p-6 lg:p-8 bg-white">
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Welcome back, <span className="text-blue-600">{user.name}!</span>
-          </h1>
-          <p className="text-gray-500 mt-2 text-lg">
-            Find and manage parking spots from the map below.
-          </p>
-        </div>
-        <div className="h-[65vh] md:h-[70vh] w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200">
-          <ParkingMap onParkingSelect={handleParkingSelect} />
+      <div className="relative  bg-white py-10 px-10">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+              Welcome back, <span className="text-blue-600">{user.name}!</span>
+            </h1>
+            <p className="text-gray-500 mt-2 text-lg">
+              Find and manage parking spots from the map below.
+            </p>
+          </div>
+          <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+            <ParkingMap onParkingSelect={handleParkingSelect} />
+          </div>
         </div>
       </div>
       <div className="relative z-10 bg-white py-20">

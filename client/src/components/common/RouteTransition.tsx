@@ -15,7 +15,15 @@ export default function RouteTransition({ children }: RouteTransitionProps) {
       setIsTransitioning(false);
     }, 150);
 
-    return () => clearTimeout(timer);
+    // Fallback timer to ensure content is always visible
+    const fallbackTimer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(fallbackTimer);
+    };
   }, [location.pathname]);
 
   return (

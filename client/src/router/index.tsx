@@ -29,8 +29,16 @@ export default function Router() {
             <AuthPage />
           </PublicRoute>
         } />
-        <Route path="/parkings" element={<ParkingListPage />} />
-        <Route path="/parkings/:id" element={<ParkingDetailPage />} />
+        <Route path="/parkings" element={
+          <ProtectedRoute>
+            <ParkingListPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/parkings/:id" element={
+          <ProtectedRoute>
+            <ParkingDetailPage />
+          </ProtectedRoute>
+        } />
         <Route path="/requests" element={
           <ProtectedRoute>
             <RequestPage />

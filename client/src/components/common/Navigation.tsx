@@ -61,8 +61,9 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-8">
             {navigationItems.map((item) => (
               <NavLink
-                key={item.path}
+                key={`${item.path}-${location.pathname}`}
                 to={item.path}
+                end={item.path === '/'}
                 className={({ isActive }) => `flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-colors ${isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
               >
                 <span>{item.icon}</span>
@@ -140,8 +141,9 @@ export default function Navigation() {
             <div className="space-y-2">
               {navigationItems.map((item) => (
                 <NavLink
-                  key={item.path}
+                  key={`${item.path}-${location.pathname}`}
                   to={item.path}
+                  end={item.path === '/'}
                   onClick={() => setIsMenuOpen(false)}
                   className={({ isActive }) => `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
                 >

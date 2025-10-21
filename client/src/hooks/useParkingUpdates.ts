@@ -50,6 +50,8 @@ export function useParkingUpdates(options: UseParkingUpdatesOptions = {}) {
     return () => {
       offParkingCountUpdate(handleParkingCountUpdate);
       setIsSubscribed(false);
+      // Clear parking updates when unsubscribing
+      setParkingUpdates(new Map());
     };
   }, [onParkingCountUpdate, offParkingCountUpdate]);
 
@@ -63,7 +65,7 @@ export function useParkingUpdates(options: UseParkingUpdatesOptions = {}) {
     }
   }, [parkingId, autoJoin, isConnected, socket, joinParkingRoom, leaveParkingRoom]);
 
-  // Cleanup on unmount
+  // Cleanup on unmount or when parkingId changes
   useEffect(() => {
     return () => {
       if (parkingId && isConnected) {
@@ -72,7 +74,7 @@ export function useParkingUpdates(options: UseParkingUpdatesOptions = {}) {
       // Clear all parking updates on unmount
       setParkingUpdates(new Map());
     };
-  }, []);
+  }, [parkingId, isConnected, leaveParkingRoom]);
 
   // Get specific parking update
   const getParkingUpdate = (id: string) => {

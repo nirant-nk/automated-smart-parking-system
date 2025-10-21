@@ -208,7 +208,13 @@ export default function ParkingListPage() {
           {/* Content MAP or LIST*/}
           {viewMode === 'map' ? (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
-              <ParkingMap onParkingSelect={handleParkingSelect} searchTerm={debouncedSearch} />
+              <ParkingMap 
+                onParkingSelect={handleParkingSelect} 
+                searchTerm={debouncedSearch}
+                parkings={enhancedParkings}
+                noParkingData={noParkingData?.requests ?? noParkingData ?? []}
+              />
+              
             </div>
           ) : (
             <div className="bg-white ring-1 bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-black border-opacity-20">
@@ -307,6 +313,7 @@ export default function ParkingListPage() {
               ))}
             </div>
           )}
+          
 
           {filteredParkings.length === 0 && (
             <div className="text-center py-12">
