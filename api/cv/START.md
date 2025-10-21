@@ -9,7 +9,6 @@
    pip install -r requirements.txt
 
    or
-
    python install_dependencies.py (recommended)
    ```
 

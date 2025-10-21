@@ -27,7 +27,7 @@ export default function HomePage() {
             {/* Main Hero Content */}
             <div className="max-w-4xl mx-auto">
               <div className="mb-8">
-                <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+                <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
                   Smart Parking
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
                     Made Simple
@@ -179,8 +179,8 @@ export default function HomePage() {
     <Layout>
       <div className="container mx-auto p-4 md:p-6 lg:p-8 bg-white">
         <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-            Welcome back, <span className="text-white">{user.name}!</span>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+            Welcome back, <span className="text-blue-600">{user.name}!</span>
           </h1>
           <p className="text-gray-500 mt-2 text-lg">
             Find and manage parking spots from the map below.

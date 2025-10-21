@@ -48,8 +48,8 @@ router.use(authenticate);
 // Parking management routes
 router.post('/', authorizeOwner, validateParkingCreation, createParking);
 router.put('/:parkingId', authorizeParkingOwner, validateParkingUpdate, updateParking);
-// router.delete('/:parkingId', authorizeParkingOwner, deleteParking);
-router.delete('/:parkingId',  deleteParking);
+// Ensure only owner/admin can delete and parkingId is valid
+router.delete('/:parkingId', authorizeParkingOwner, validateParkingId, deleteParking);
 
 // Vehicle count management routes
 router.put('/:parkingId/vehicle-count', authorizeParkingStaff, validateVehicleCountUpdate, updateVehicleCount);

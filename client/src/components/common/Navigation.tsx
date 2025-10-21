@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useClickOutside } from '../../hooks/useClickOutside';
 
@@ -44,7 +44,7 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20 sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -59,36 +59,31 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navigationItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-light transition-colors
-                    ${isActive ? 'bg-gray-300 text-black font-semibold' : 'text-gray-700 hover:bg-gray-200 hover:text-black'}
-                  `}
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
+            {navigationItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => `flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-colors ${isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.name}</span>
+              </NavLink>
+            ))}
           </div>
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
             {/* Wallet Balance */}
-            <div className="hidden sm:flex items-center space-x-2 bg-green-600 bg-opacity-20 px-3 py-2 rounded-lg">
-              <span className="text-green-300">💰</span>
-              <span className="text-white font-medium">{user.wallet.coins} coins</span>
+            <div className="hidden sm:flex items-center space-x-2 bg-green-100 px-3 py-2 rounded-lg">
+              <span className="text-green-700">💰</span>
+              <span className="text-green-800 font-medium">{user.wallet.coins} coins</span>
             </div>
 
             {/* User Avatar */}
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 text-white hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-lg transition-colors"
+                className="flex items-center space-x-2 text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
               >
                 <div className="flex justify-around items-center ring-1 ring-gray-300 p-2 rounded-lg">
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
@@ -96,24 +91,24 @@ export default function Navigation() {
                       {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="hidden sm:block text-black p-2">{user.name}</span>
-                  <span className="text-black">▼</span>
+                  <span className="hidden sm:block text-gray-900 p-2">{user.name}</span>
+                  <span className="text-gray-900">▼</span>
                 </div>
               </button>
 
               {/* Dropdown Menu */}
               {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-lg border border-white border-opacity-20 py-2">
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                   <div className="px-4 py-2 border-b border-gray-200">
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                    <p className="text-sm text-gray-800">{user.email}</p>
+                    <p className="text-sm text-gray-600">{user.email}</p>
                   </div>
                   {isAdmin && (
-                    <Link to="/admin" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
+                    <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                       📊 Admin Dashboard
                     </Link>
                   )}
-                  <Link to="/profile" className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
+                  <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     👤 Profile
                   </Link>
 
@@ -130,7 +125,7 @@ export default function Navigation() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-lg"
+              className="md:hidden text-gray-900 hover:bg-gray-100 p-2 rounded-lg"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -141,28 +136,24 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white border-opacity-20" ref={mobileMenuRef}>
+          <div className="md:hidden py-4 border-t border-gray-200" ref={mobileMenuRef}>
             <div className="space-y-2">
               {navigationItems.map((item) => (
-                <Link
+                <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                    location.pathname === item.path
-                      ? 'bg-gray-300 text-black'
-                      : 'text-gray-100 hover:text-white hover:bg-white hover:bg-opacity-10'
-                  }`}
+                  className={({ isActive }) => `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
                 >
                   <span>{item.icon}</span>
                   <span>{item.name}</span>
-                </Link>
+                </NavLink>
               ))}
               <div className="pt-2 border-t border-white border-opacity-20">
                 <Link
                   to="/profile"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 text-gray-100"
+                  className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                 >
                   👤 Profile
                 </Link>
@@ -170,14 +161,14 @@ export default function Navigation() {
                   <Link
                     to="/admin"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block px-3 py-2 text-gray-100"
+                    className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                   >
                     📊 Dashboard
                   </Link>
                 )}
                 <div className="flex items-center space-x-3 px-3 py-2">
-                  <span className="text-green-300">💰</span>
-                  <span className="text-white font-medium">{user.wallet.coins} coins</span>
+                  <span className="text-green-700">💰</span>
+                  <span className="text-green-800 font-medium">{user.wallet.coins} coins</span>
                 </div>
                 <button
                   onClick={() => {
@@ -185,7 +176,7 @@ export default function Navigation() {
                     setIsMenuOpen(false);
                     setIsUserMenuOpen(false);
                   }}
-                  className="w-full text-left flex items-center space-x-3 px-3 py-2 text-red-400 hover:bg-red-500 hover:bg-opacity-10 rounded-lg transition-colors"
+                  className="w-full text-left flex items-center space-x-3 px-3 py-2 text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <span>🚪</span>
                   <span>Logout</span>

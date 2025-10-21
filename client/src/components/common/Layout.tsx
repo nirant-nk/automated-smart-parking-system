@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ children, showNavigation = true }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700">
+    <div className="min-h-screen bg-gray-50">
       {showNavigation && <Navigation />}
       <main className="flex-1 relative">
         <RouteTransition>

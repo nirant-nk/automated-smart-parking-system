@@ -224,9 +224,9 @@ export const updateParking = asyncHandler(async (req, res) => {
 // @access  Private (Owner/Admin)
 export const deleteParking = asyncHandler(async (req, res) => {
   const { parkingId } = req.params;
-
-
-  const parking = await Parking.findOne(parkingId);
+  
+  // Support both Mongo ObjectId and parkingId string
+  const parking = await Parking.findByIdOrParkingId(parkingId);
 
   if (!parking) {
     throw new AppError(ERROR_MESSAGES.PARKING_NOT_FOUND, 404);
@@ -243,7 +243,14 @@ export const deleteParking = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'Parking deleted successfully'
+    message: 'Parking deleted successfully',
+    data: {
+      parking: {
+        _id: parking._id,
+        parkingId: parking.parkingId,
+        isActive: parking.isActive
+      }
+    }
   });
 });
 

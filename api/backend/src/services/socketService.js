@@ -130,15 +130,18 @@ class SocketService {
 
   async handleParkingCountUpdate(socket, data) {
     try {
-      const { parking_id, counts, capacity } = data;
+      // Accept both snake_case and camelCase for compatibility
+      const parkingIdKey = data.parkingId || data.parking_id;
+      const counts = data.counts;
+      const capacity = data.capacity;
       
-      if (!parking_id || !counts) {
+      if (!parkingIdKey || !counts) {
         socket.emit('error', { message: 'Invalid parking count update data' });
         return;
       }
 
       // Find parking by ID using the new helper method
-      const parking = await Parking.findByIdOrParkingId(parking_id, { isActive: true });
+      const parking = await Parking.findByIdOrParkingId(parkingIdKey, { isActive: true });
 
       if (!parking) {
         socket.emit('error', { message: 'Parking not found' });
