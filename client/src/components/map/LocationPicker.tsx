@@ -1,8 +1,8 @@
-import { useGeolocation } from '../../hooks/useGeolocation';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, TileLayer, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { useGeolocation } from '../../hooks/useGeolocation';
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -47,7 +47,7 @@ export default function LocationPicker({ onLocationSelect, initialLocation, clas
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(
     initialLocation || null
   );
-  const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]); // San Francisco default
+  const [mapCenter, setMapCenter] = useState<[number, number]>([18.457008, 73.882970]); // Pune kondhwa
 
   // Set initial map center
   useEffect(() => {

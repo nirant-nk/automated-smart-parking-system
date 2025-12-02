@@ -84,7 +84,7 @@ export default function ParkingMap({ onParkingSelect, showUserLocation = true, s
   };
 
   const { location: userLocation, loading: locationLoading } = useGeolocation();
-  const [mapCenter, setMapCenter] = useState<[number, number]>([18.4636, 73.8682]); // San Francisco default
+  const [mapCenter, setMapCenter] = useState<[number, number]>([18.457008, 73.882970]); // Pune kondhwa
   
   useEffect(() => {
     if (userLocation && !locationLoading) {
