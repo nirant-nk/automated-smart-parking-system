@@ -1,5 +1,6 @@
-import { COIN_REWARDS, SUCCESS_MESSAGES } from '../constants.js';
+import fs from 'fs/promises';
 import { uploadToCloudinary } from '../config/cloudinary.js';
+import { COIN_REWARDS, SUCCESS_MESSAGES } from '../constants.js';
 import { AppError, asyncHandler } from '../middlewares/errorHandler.js';
 import Parking from '../models/Parking.js';
 import Request from '../models/Request.js';
@@ -44,6 +45,12 @@ export const createRequest = asyncHandler(async (req, res) => {
             publicId: uploadResult.data.publicId,
             caption: file.originalname
           });
+          // Delete the local temp file after successful upload to Cloudinary
+          try {
+            if (file.path) await fs.unlink(file.path);
+          } catch (err) {
+            console.error('Failed to delete local uploaded file:', file.path, err);
+          }
         } else {
           console.error('Failed to upload image:', uploadResult.error);
         }
